@@ -1,0 +1,15 @@
+project_slug,status,db_bytes,seconds
+DSpace__DSpace_CVE-2016-10726_4.4,failed_rc1,0,13
+DSpace__DSpace_CVE-2022-31192_5.10,ok,144124717,178
+DSpace__DSpace_CVE-2022-31194_5.10,ok,144086498,173
+DSpace__DSpace_CVE-2022-31195_5.10,ok,144072594,175
+ESAPI__esapi-java-legacy_CVE-2022-23457_2.2.3.1,failed_rc1,0,320
+ESAPI__esapi-java-legacy_CVE-2022-24891_2.2.3.1,failed_rc1,0,321
+Graylog2__graylog2-server_CVE-2023-41044_5.1.2,failed_rc1,0,127
+OWASP__json-sanitizer_CVE-2020-13973_1.2.0,ok,6158700,13
+SpringSource__spring-security-oauth_CVE-2018-1260_2.3.2.RELEASE,failed_rc1,0,3
+alibaba__nacos_CVE-2021-44667_2.0.3,ok,102235814,175
+alibaba__one-java-agent_CVE-2022-25842_0.0.1,failed_rc1,0,3
+apache__activemq_CVE-2014-3576_5.10.2,failed_rc1,0,128
+apache__activemq_CVE-2019-0222_5.15.8,failed_rc1,0,561
+apache__activemq_CVE-2020-11998_5.15.12,ok,294083604,555
