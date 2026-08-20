@@ -1,3 +1,40 @@
-# Local mirror of the GPU server working tree — re-pullable, never committed.
-gpu-backup/
-gpu-backup-sync.log
+# Heavy, re-creatable IRIS artifacts (~60G on the GPU box)
+IRIS/data/
+IRIS/.conda-iris/
+IRIS/codeql/
+IRIS/output/
+codeql-home/
+*codeql-db*/
+*.codeqldb/
+project-sources/
+java-env/
+
+# Model weights / archives
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.jar
+*.nar
+*.tar.gz
+*.zip
+
+# Upstream IRIS ignores
+patch_info
+projects
+projects-gh
+commit_data
+old
+outputs*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Local tooling / OS
+.claude/
+.DS_Store
+.idea/
+.vscode/

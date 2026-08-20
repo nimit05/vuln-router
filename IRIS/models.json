@@ -1,0 +1,13 @@
+{
+  "_comment": "Add any Ollama model here. Left = name you pass to --llm (must start with 'ollama-'). Right = the ollama tag. Pull it first: ollama pull <tag>",
+  "ollama-deepseekcoder-7b": "deepseek-coder:6.7b",
+  "ollama-llama3-8b": "llama3:latest",
+  "ollama-llama33-70b": "llama3.3:latest",
+  "ollama-qwen3-coder-30b": "qwen3-coder:30b",
+  "ollama-gptoss-20b": "gpt-oss:20b",
+  "ollama-gemma3-27b": "gemma3:27b",
+  "ollama-qwen36-27b": "qwen3.6:27b",
+  "ollama-phi4-14b": "phi4:14b",
+  "ollama-mistral-small-24b": "mistral-small3.2:24b",
+  "ollama-dsc-fp16": "deepseek-coder:6.7b-instruct-fp16"
+}

@@ -1,0 +1,11 @@
+codeql-all-dbs
+codeql-all-dbs-gh
+patch_info
+projects
+projects-gh
+commit_data
+old
+outputs*
+output/
+
+**/__pycache__
