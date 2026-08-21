@@ -38,3 +38,9 @@ __pycache__/
 .DS_Store
 .idea/
 .vscode/
+
+# LLMDFA per-case artifacts (5,169 report.json + 2,582 transformed .java inputs,
+# ~54MB). Not needed for any published number: the results table is computed from
+# LLMDFA/reproduction/logs/ alone. Full copies live on csecluster at ~/job_results/.
+LLMDFA/reproduction/logs_artifacts/
+LLMDFA/results/job_artifacts/

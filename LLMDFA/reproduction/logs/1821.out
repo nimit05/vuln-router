@@ -1,0 +1,94 @@
+Job 1821 on gpu-A100-01; model=deepseek-ai/deepseek-coder-6.7b-instruct
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+waiting for vLLM...
+vLLM up after ~435s
+=== Phase I: extractor synthesis (xss_src, xss_sink) ===
+--- xss_src ---
+INFO:root:Synthesizing xss_src using deepseek-coder-6.7b-instruct
+INFO:root:Synthesizing the parser...
+INFO:httpx:HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/main.py", line 218, in <module>
+    run(
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/main.py", line 169, in run
+    parser, iterations = synthesize_xss_source(model)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/main.py", line 65, in synthesize_xss_source
+    return synthesize(model, spec)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/synthesize.py", line 131, in synthesize
+    synthesized = matches.group(2)
+                  ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'group'
+
+real	0m11.834s
+user	0m1.116s
+sys	0m0.191s
+SYNTHESIS FAILED: xss_src
+--- xss_sink ---
+INFO:root:Synthesizing xss_sink using deepseek-coder-6.7b-instruct
+INFO:root:Synthesizing the parser...
+INFO:httpx:HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/main.py", line 218, in <module>
+    run(
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/main.py", line 171, in run
+    parser, iterations = synthesize_xss_sink(model)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/main.py", line 78, in synthesize_xss_sink
+    return synthesize(model, spec)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1821/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/synthesize.py", line 131, in synthesize
+    synthesized = matches.group(2)
+                  ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'group'
+
+real	0m6.780s
+user	0m0.876s
+sys	0m0.127s
+SYNTHESIS FAILED: xss_sink
+=== Phases II/IV: protocol probe ===
+=== Phase II probe: Yes/No compliance ===
+  item 1: parsed=False answer=- expected=Yes (2.1s)
+  item 2: parsed=False answer=- expected=No (2.7s)
+  item 3: parsed=False answer=- expected=Yes (1.9s)
+  item 4: parsed=False answer=- expected=No (2.3s)
+  item 5: parsed=False answer=- expected=Yes (2.2s)
+  item 6: parsed=False answer=- expected=No (2.0s)
+=== Phase IV probe: Z3 script synthesis ===
+  item 1: fenced=True verdict=ERR expected=UNSAT (3.1s)
+  item 2: fenced=True verdict=ERR expected=SAT (3.6s)
+  item 3: fenced=True verdict=ERR expected=SAT (3.7s)
+{
+  "model": "deepseek-coder-6.7b-instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "phase2_yesno": {
+    "n": 6,
+    "parse_rate": 0.0,
+    "accuracy": 0.0,
+    "avg_latency_s": 2.1903052727381387,
+    "input_tokens": 5856,
+    "output_tokens": 1071
+  },
+  "phase4_z3": {
+    "n": 3,
+    "well_fenced_rate": 1.0,
+    "first_try_run_rate": 0.0,
+    "correct_verdict_rate": 0.0,
+    "avg_latency_s": 3.499091863632202,
+    "input_tokens": 1071,
+    "output_tokens": 894,
+    "first_try_errors": [
+      "SyntaxError: illegal target for annotation",
+      "SyntaxError: illegal target for annotation",
+      "SyntaxError: illegal target for annotation"
+    ]
+  },
+  "llm_counters": {
+    "calls": 9,
+    "empty": 0,
+    "failed": 0
+  }
+}
+Gate A done at Thu Aug 20 05:15:28 PM IST 2026. Results -> ~/job_results/1821/

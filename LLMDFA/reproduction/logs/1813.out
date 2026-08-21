@@ -1,0 +1,13 @@
+Job 1813 on gpu-A100-01
+model=Qwen/Qwen2.5-Coder-7B-Instruct bug=xss mode=single tp=1
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+client deps ok
+waiting for vLLM...
+vLLM up after ~195s
+usage: run_llmdfa.py [-h] --model-name {gpt-3.5-turbo,gpt-4-turbo,gpt-4o-mini}
+                     --bug-type {dbz,xss,osci} [-syn-parser] [-fscot]
+                     [-syn-solver]
+                     [--solving-refine-number SOLVING_REFINE_NUMBER]
+                     [--analysis-mode {all,single}]
+run_llmdfa.py: error: argument --model-name: invalid choice: 'Qwen2.5-Coder-7B-Instruct' (choose from 'gpt-3.5-turbo', 'gpt-4-turbo', 'gpt-4o-mini')

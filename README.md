@@ -1,37 +1,25 @@
 # vuln-router
 
-IRIS reproduction — the primary reproduction target for cost-aware LLM routing
-in vulnerability detection.
 
-Upstream: [iris-sast/iris](https://github.com/iris-sast/iris) @ `v1`
-(the 120-CVE ICLR 2025 configuration), MIT licensed, (c) 2024 Ziyang Li.
+---
 
-## Layout
+## LLMDFA
 
-| Path | Contents |
-|---|---|
-| `IRIS/src/` | pipeline — `neusym_vul.py`, `codeql_vul.py`, `prompts.py`, `modules/`, 16 model adapters |
-| `IRIS/scripts/` | `build_codeql_dbs.py`, `get_packages_codeql.py` |
-| `IRIS/results/` | upstream's published per-model CSVs |
-| `IRIS/reproduction/` | this reproduction's findings, deviations, checkpoints, metrics, run logs |
+LLMDFA reproduced with a free open-weight model (Qwen2.5-Coder-7B-Instruct, bf16 via
+vLLM on one A100-40GB) in place of the four paid APIs the paper used, which it reports
+cost USD 1,622.
 
-## Modified vs upstream
+| bug | cases | precision | recall | F1 | paper gpt-3.5 |
+|---|---|---|---|---|---|
+| XSS | 666 | 97.47% | 92.64% | 0.950 | 100 / 92.31 / 0.96 |
+| OSCI | 444 | 83.95% | 91.89% | 0.877 | 100 / 78.38 / 0.88 |
+| DBZ | 1762 | 45.42% | 93.64% | 0.612 | 73.75 / 92.16 / 0.82 |
 
-    scripts/build_codeql_dbs.py
-    src/codeql_vul.py
-    src/neusym_vul.py
-    src/models/{config,deepseek,llm,ollama}.py
+Recall exceeds the paper on all three bug types. XSS and OSCI reproduce within 0.01 F1;
+DBZ does not, and the gap is localised to the Z3 path-feasibility stage rather than
+spread across the pipeline. Details and deviations in `LLMDFA/reproduction/FINDINGS.md`.
 
-## Not in this repo
+Upstream LLMDFA is not vendored here — `LLMDFA/scripts/patch_llmdfa.sh` adapts a fresh
+clone. Metrics regenerate offline with no GPU:
 
-Excluded via `.gitignore` as re-creatable (~60 GB): `IRIS/data/` (CWE-Bench-Java
-sources and the JDK/Maven/Gradle toolchain), `IRIS/.conda-iris/`, `IRIS/codeql/`
-(CodeQL CLI install), `IRIS/output/` (per-CVE run output).
-
-`IRIS/data/cwe-bench-java` is a submodule of
-[iris-sast/cwe-bench-java](https://github.com/iris-sast/cwe-bench-java) — init it
-separately after cloning.
-
-## Reproduction status
-
-See `IRIS/reproduction/FINDINGS.md`, `RESULTS_TABLE.md`, and `SETUP_DEVIATIONS.md`.
+    python3 LLMDFA/scripts/score_llmdfa.py LLMDFA/reproduction/logs/*.out

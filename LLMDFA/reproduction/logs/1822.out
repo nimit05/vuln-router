@@ -1,0 +1,7 @@
+Job 1822 on gpu-A100-02
+model=deepseek-ai/deepseek-coder-6.7b-instruct bug=xss mode=single tp=1 cases=37 seed=42
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+client deps ok
+waiting for vLLM...
+vLLM up after ~435s

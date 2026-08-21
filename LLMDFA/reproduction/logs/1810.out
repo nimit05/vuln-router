@@ -1,0 +1,49 @@
+Job 1810 on gpu-A100-01; model=Qwen/Qwen2.5-Coder-7B-Instruct
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+waiting for vLLM...
+vLLM up after ~345s
+=== Phase I: extractor synthesis (xss_src, xss_sink) ===
+--- xss_src ---
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1810/LLMDFA/src/TSAgent/synthesis/main.py", line 15, in <module>
+    from TSAgent.synthesis.llm import GPT, LLM, Claude, Gemini
+  File "/scratch/local/w.nimit/1810/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/llm.py", line 10, in <module>
+    import google.generativeai as genai
+ModuleNotFoundError: No module named 'google'
+
+real	0m4.016s
+user	0m0.842s
+sys	0m0.180s
+SYNTHESIS FAILED: xss_src
+--- xss_sink ---
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1810/LLMDFA/src/TSAgent/synthesis/main.py", line 15, in <module>
+    from TSAgent.synthesis.llm import GPT, LLM, Claude, Gemini
+  File "/scratch/local/w.nimit/1810/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/llm.py", line 10, in <module>
+    import google.generativeai as genai
+ModuleNotFoundError: No module named 'google'
+
+real	0m0.803s
+user	0m0.520s
+sys	0m0.100s
+SYNTHESIS FAILED: xss_sink
+=== Phases II/IV: protocol probe ===
+=== Phase II probe: Yes/No compliance ===
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/cluster/gate_a_probe.py", line 223, in <module>
+    main()
+  File "/userhome/mtech/w.nimit/cluster/gate_a_probe.py", line 151, in main
+    m = LLM(args.model, "EMPTY", 0.0, role)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1810/LLMDFA/src/utility/llm.py", line 59, in __init__
+    self.client = OpenAI(
+                  ^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/openai/_client.py", line 123, in __init__
+    super().__init__(
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/openai/_base_client.py", line 849, in __init__
+    self._client = http_client or SyncHttpxClientWrapper(
+                                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/openai/_base_client.py", line 747, in __init__
+    super().__init__(**kwargs)
+TypeError: Client.__init__() got an unexpected keyword argument 'proxies'

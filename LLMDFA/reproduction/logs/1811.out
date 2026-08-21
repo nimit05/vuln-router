@@ -1,0 +1,273 @@
+Job 1811 on gpu-A100-01; model=Qwen/Qwen2.5-Coder-7B-Instruct
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+waiting for vLLM...
+vLLM up after ~135s
+=== Phase I: extractor synthesis (xss_src, xss_sink) ===
+--- xss_src ---
+INFO:root:Synthesizing xss_src using Qwen2.5-Coder-7B-Instruct
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/llm.py", line 96, in __init__
+    self.encoder = tiktoken.encoding_for_model(self.model)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/model.py", line 103, in encoding_for_model
+    return get_encoding(encoding_name_for_model(model_name))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/model.py", line 90, in encoding_name_for_model
+    raise KeyError(
+KeyError: 'Could not automatically map Qwen2.5-Coder-7B-Instruct to a tokeniser. Please use `tiktoken.get_encoding` to explicitly get the tokeniser you expect.'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 1106, in _validate_conn
+    conn.connect()
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connection.py", line 796, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connection.py", line 975, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+               ^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 433, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 477, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 1042, in _create
+    self.do_handshake()
+  File "/usr/lib/python3.12/ssl.py", line 1320, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 842, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/util/retry.py", line 543, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='openaipublic.blob.core.windows.net', port=443): Max retries exceeded with url: /encodings/cl100k_base.tiktoken (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)")))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/main.py", line 218, in <module>
+    run(
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/main.py", line 163, in run
+    model = select_model(model_name, temperature, log_file)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/main.py", line 145, in select_model
+    model = GPT(
+            ^^^^
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/llm.py", line 98, in __init__
+    self.encoder = tiktoken.get_encoding("cl100k_base")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/registry.py", line 73, in get_encoding
+    enc = Encoding(**constructor())
+                     ^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken_ext/openai_public.py", line 72, in cl100k_base
+    mergeable_ranks = load_tiktoken_bpe(
+                      ^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/load.py", line 147, in load_tiktoken_bpe
+    contents = read_file_cached(tiktoken_bpe_file, expected_hash)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/load.py", line 64, in read_file_cached
+    contents = read_file(blobpath)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/load.py", line 25, in read_file
+    resp = requests.get(blobpath)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/api.py", line 87, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/api.py", line 71, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/adapters.py", line 727, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='openaipublic.blob.core.windows.net', port=443): Max retries exceeded with url: /encodings/cl100k_base.tiktoken (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)")))
+
+real	0m2.358s
+user	0m0.731s
+sys	0m0.133s
+SYNTHESIS FAILED: xss_src
+--- xss_sink ---
+INFO:root:Synthesizing xss_sink using Qwen2.5-Coder-7B-Instruct
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/llm.py", line 96, in __init__
+    self.encoder = tiktoken.encoding_for_model(self.model)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/model.py", line 103, in encoding_for_model
+    return get_encoding(encoding_name_for_model(model_name))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/model.py", line 90, in encoding_name_for_model
+    raise KeyError(
+KeyError: 'Could not automatically map Qwen2.5-Coder-7B-Instruct to a tokeniser. Please use `tiktoken.get_encoding` to explicitly get the tokeniser you expect.'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 1106, in _validate_conn
+    conn.connect()
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connection.py", line 796, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connection.py", line 975, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+               ^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 433, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 477, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 1042, in _create
+    self.do_handshake()
+  File "/usr/lib/python3.12/ssl.py", line 1320, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 842, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/urllib3/util/retry.py", line 543, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='openaipublic.blob.core.windows.net', port=443): Max retries exceeded with url: /encodings/cl100k_base.tiktoken (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)")))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/main.py", line 218, in <module>
+    run(
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/main.py", line 163, in run
+    model = select_model(model_name, temperature, log_file)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/main.py", line 145, in select_model
+    model = GPT(
+            ^^^^
+  File "/scratch/local/w.nimit/1811/LLMDFA/src/TSAgent/synthesis/../../TSAgent/synthesis/llm.py", line 98, in __init__
+    self.encoder = tiktoken.get_encoding("cl100k_base")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/registry.py", line 73, in get_encoding
+    enc = Encoding(**constructor())
+                     ^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken_ext/openai_public.py", line 72, in cl100k_base
+    mergeable_ranks = load_tiktoken_bpe(
+                      ^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/load.py", line 147, in load_tiktoken_bpe
+    contents = read_file_cached(tiktoken_bpe_file, expected_hash)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/load.py", line 64, in read_file_cached
+    contents = read_file(blobpath)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/tiktoken/load.py", line 25, in read_file
+    resp = requests.get(blobpath)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/api.py", line 87, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/api.py", line 71, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/userhome/mtech/w.nimit/llmdfa-venv/lib/python3.12/site-packages/requests/adapters.py", line 727, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='openaipublic.blob.core.windows.net', port=443): Max retries exceeded with url: /encodings/cl100k_base.tiktoken (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'openaipublic.blob.core.windows.net'. (_ssl.c:1000)")))
+
+real	0m0.836s
+user	0m0.635s
+sys	0m0.088s
+SYNTHESIS FAILED: xss_sink
+=== Phases II/IV: protocol probe ===
+=== Phase II probe: Yes/No compliance ===
+  item 1: parsed=True answer=Yes expected=Yes (1.4s)
+  item 2: parsed=True answer=No expected=No (1.0s)
+  item 3: parsed=True answer=Yes expected=Yes (1.3s)
+  item 4: parsed=True answer=No expected=No (1.4s)
+  item 5: parsed=True answer=Yes expected=Yes (1.0s)
+  item 6: parsed=True answer=No expected=No (1.2s)
+=== Phase IV probe: Z3 script synthesis ===
+  item 1: fenced=True verdict=ERR expected=UNSAT (1.6s)
+  item 2: fenced=True verdict=SAT expected=SAT (1.5s)
+  item 3: fenced=True verdict=ERR expected=SAT (1.7s)
+{
+  "model": "Qwen2.5-Coder-7B-Instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "phase2_yesno": {
+    "n": 6,
+    "parse_rate": 1.0,
+    "accuracy": 1.0,
+    "avg_latency_s": 1.22962220509847,
+    "input_tokens": 5718,
+    "output_tokens": 545
+  },
+  "phase4_z3": {
+    "n": 3,
+    "well_fenced_rate": 1.0,
+    "first_try_run_rate": 0.3333333333333333,
+    "correct_verdict_rate": 0.3333333333333333,
+    "avg_latency_s": 1.6152158578236897,
+    "input_tokens": 984,
+    "output_tokens": 384
+  },
+  "llm_counters": {
+    "calls": 9,
+    "empty": 0,
+    "failed": 0
+  }
+}
+Gate A done at Thu Aug 20 03:44:53 PM IST 2026. Results -> ~/job_results/1811/

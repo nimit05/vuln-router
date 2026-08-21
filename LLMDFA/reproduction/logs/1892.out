@@ -1,0 +1,6 @@
+Job 1892 on gpu-A100-01
+model=Qwen/Qwen2.5-Coder-7B-Instruct bug=dbz mode=all tp=1 cases=10 seed=none shard=1411+89
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+client deps ok
+waiting for vLLM...

@@ -1,0 +1,77 @@
+Job 1812 on gpu-A100-01; model=Qwen/Qwen2.5-Coder-7B-Instruct
+NVIDIA A100-PCIE-40GB, 40960 MiB
+NVIDIA A100-PCIE-40GB, 40960 MiB
+waiting for vLLM...
+vLLM up after ~195s
+=== Phase I: extractor synthesis (xss_src, xss_sink) ===
+--- xss_src ---
+INFO:root:Synthesizing xss_src using Qwen2.5-Coder-7B-Instruct
+INFO:root:Synthesizing the parser...
+INFO:httpx:HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:root:Synthesized successfully in 1 iterations
+INFO:root:Total Iterations: 1
+INFO:root:Total Input Token Cost: 3360
+INFO:root:Total Output Token Cost: 523
+INFO:root:Total Time: 7.547719240188599
+INFO:root:Parser written to /scratch/local/w.nimit/1812/results/_xss_src_extractor.py
+
+real	0m11.085s
+user	0m1.098s
+sys	0m0.185s
+--- xss_sink ---
+INFO:root:Synthesizing xss_sink using Qwen2.5-Coder-7B-Instruct
+INFO:root:Synthesizing the parser...
+INFO:httpx:HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:root:Synthesized successfully in 1 iterations
+INFO:root:Total Iterations: 1
+INFO:root:Total Input Token Cost: 1833
+INFO:root:Total Output Token Cost: 303
+INFO:root:Total Time: 4.2109997272491455
+INFO:root:Parser written to /scratch/local/w.nimit/1812/results/_xss_sink_extractor.py
+
+real	0m5.171s
+user	0m0.859s
+sys	0m0.118s
+=== Phases II/IV: protocol probe ===
+=== Phase II probe: Yes/No compliance ===
+  item 1: parsed=True answer=Yes expected=Yes (1.0s)
+  item 2: parsed=True answer=No expected=No (1.0s)
+  item 3: parsed=True answer=Yes expected=Yes (1.3s)
+  item 4: parsed=True answer=No expected=No (1.4s)
+  item 5: parsed=True answer=Yes expected=Yes (1.0s)
+  item 6: parsed=True answer=No expected=No (1.2s)
+=== Phase IV probe: Z3 script synthesis ===
+  item 1: fenced=True verdict=ERR expected=UNSAT (1.6s)
+  item 2: fenced=True verdict=SAT expected=SAT (1.5s)
+  item 3: fenced=True verdict=ERR expected=SAT (1.7s)
+{
+  "model": "Qwen2.5-Coder-7B-Instruct",
+  "base_url": "http://127.0.0.1:8000/v1",
+  "phase2_yesno": {
+    "n": 6,
+    "parse_rate": 1.0,
+    "accuracy": 1.0,
+    "avg_latency_s": 1.1650721232096355,
+    "input_tokens": 5718,
+    "output_tokens": 545
+  },
+  "phase4_z3": {
+    "n": 3,
+    "well_fenced_rate": 1.0,
+    "first_try_run_rate": 0.3333333333333333,
+    "correct_verdict_rate": 0.3333333333333333,
+    "avg_latency_s": 1.6172034740447998,
+    "input_tokens": 984,
+    "output_tokens": 384,
+    "first_try_errors": [
+      "z3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values.",
+      "z3.z3types.Z3Exception: Symbolic expressions cannot be cast to concrete Boolean values."
+    ]
+  },
+  "llm_counters": {
+    "calls": 9,
+    "empty": 0,
+    "failed": 0
+  }
+}
+Gate A done at Thu Aug 20 03:55:00 PM IST 2026. Results -> ~/job_results/1812/
