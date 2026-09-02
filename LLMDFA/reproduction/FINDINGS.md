@@ -32,7 +32,7 @@ Paper columns are its own published Table 1 "Detection" rows.
 
 | bug | cases | TP | FP | precision | recall | F1 | paper gpt-3.5 | paper gpt-4 |
 |---|---|---|---|---|---|---|---|---|
-| DBZ | 1762/1851 | 1650 | 1983 | 45.42% | **93.64%** | 0.612 | 73.75 / 92.16 / 0.82 | 81.38 / 95.75 / 0.87 |
+| DBZ | 1851/1851 | 1739 | 2115 | 45.12% | **93.95%** | 0.610 | 73.75 / 92.16 / 0.82 | 81.38 / 95.75 / 0.87 |
 | XSS | 666/666 | 617 | 16 | 97.47% | **92.64%** | 0.950 | 100.00 / 92.31 / 0.96 | 100.00 / 98.64 / 0.99 |
 | OSCI | 444/444 | 408 | 78 | 83.95% | **91.89%** | 0.877 | 100.00 / 78.38 / 0.88 | 100.00 / 89.19 / 0.94 |
 
@@ -40,7 +40,7 @@ Paper columns are its own published Table 1 "Detection" rows.
 Precision is lower on all three. The model finds more of the real bugs and discards
 fewer of the false ones.
 
-Cost: DBZ 28,673 input / 2,526 output tokens per case at 36.4 s; XSS 6,283 / 696 at
+Cost: DBZ 30,566 input / 2,755 output tokens per case at 39.4 s; XSS 6,283 / 696 at
 9.1 s; OSCI 4,452 / 468 at 6.5 s. About 20 GPU-hours in total.
 
 ## Why DBZ fails: one stage, measured three ways
@@ -66,8 +66,8 @@ contain no infeasible bug-inducing paths.
    The paper reports **0.61%** for DBZ with gpt-3.5 (Appendix A.3.2). Ours is ~29x higher.
 3. **The consequence is the one the paper predicts.** It states: *"LLMDFA may encode the
    path condition incorrectly and accept the infeasible path, eventually causing false
-   positives."* That is exactly the observed failure — 1,983 false positives against 1,650
-   true ones, with recall untouched at 93.64%.
+   positives."* That is exactly the observed failure — 2,115 false positives against 1,739
+   true ones, with recall untouched at 93.95%.
 
 Note DBZ is the weakest row in the paper too: gpt-3.5 reaches only 73.75% precision there
 against 100% on XSS and OSCI, and gemini-1.0 drops to 66.57%. The weakness is inherent to
@@ -88,7 +88,7 @@ argument for a uniformly larger model.
    stage is effectively model-independent — but Phase I here is not strictly Qwen's.
 3. **Scoring aggregation.** LLMDFA's `TPs` counts reported *traces*; several paths can
    reach one labelled sink, so raw trace sums give recall above 100%. True positives are
-   capped per case at that case's ground truth (361 duplicate traces discarded on DBZ).
+   capped per case at that case's ground truth (450 duplicate traces discarded on DBZ).
    The paper does not state its aggregation, so its precision may be computed differently.
 4. **Sharding.** DBZ was split into 4 independent jobs. Cases are independent; no effect
    on results.
@@ -101,9 +101,10 @@ argument for a uniformly larger model.
    DBZ shards. The paper describes a fallback rather than a crash (*"If the script is
    buggy after three trials, LLMDFA enforces LLMs to determine path feasibility"*), so the
    assertion was replaced with that fallback path. Frequency: twice in 1,851 DBZ cases.
-7. **Coverage.** DBZ is 1,762 of 1,851 cases (95.2%); the remaining 89 were lost to the
-   crash above and are being re-run. The 37-case sample and the full set agree closely
-   (F1 0.607 vs 0.612), so the outstanding cases are not expected to move the result.
+7. **Coverage.** Complete: all 1,851 DBZ, 666 XSS and 444 OSCI cases. DBZ was assembled
+   from 5 shards (the crash above cost 89 cases, re-run as job 1892). The stability of the
+   DBZ estimate across sample sizes is worth noting: F1 0.607 on a seeded 37-case sample,
+   0.612 at 1,762 cases, 0.610 at the full 1,851.
 
 ## Reproducing these numbers
 

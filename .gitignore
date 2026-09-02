@@ -44,3 +44,23 @@ __pycache__/
 # LLMDFA/reproduction/logs/ alone. Full copies live on csecluster at ~/job_results/.
 LLMDFA/reproduction/logs_artifacts/
 LLMDFA/results/job_artifacts/
+.venv/
+
+# Juliet benchmark from the upstream LLMDFA repo (not vendored, re-clonable)
+LLMDFA/benchmark/
+
+# Duplicate of the tracked IRIS/reproduction/ tree (byte-identical). Left on disk
+# so the results/<paper>/ layout stays browsable; the canonical copy is versioned
+# under IRIS/reproduction/.
+/results/
+
+# Local GPU-box mirror tooling and its rsync log. The GPU box is out of the loop
+# (all runs are on csecluster), so this is machine-local, not a repo artifact.
+gpu-backup/
+gpu-backup-sync.log
+gpu-backup-sync.sh
+
+# Exploratory model/offset sweep output (score_probe.py --logdir). Nothing in the
+# results table or ROUTER_*.md is computed from it; logs_router/ carries the
+# router evidence. Kept on disk so score_probe.py runs locally unchanged.
+LLMDFA/reproduction/logs_probe/

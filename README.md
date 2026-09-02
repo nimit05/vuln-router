@@ -13,7 +13,7 @@ cost USD 1,622.
 |---|---|---|---|---|---|
 | XSS | 666 | 97.47% | 92.64% | 0.950 | 100 / 92.31 / 0.96 |
 | OSCI | 444 | 83.95% | 91.89% | 0.877 | 100 / 78.38 / 0.88 |
-| DBZ | 1762 | 45.42% | 93.64% | 0.612 | 73.75 / 92.16 / 0.82 |
+| DBZ | 1851 | 45.12% | 93.95% | 0.610 | 73.75 / 92.16 / 0.82 |
 
 Recall exceeds the paper on all three bug types. XSS and OSCI reproduce within 0.01 F1;
 DBZ does not, and the gap is localised to the Z3 path-feasibility stage rather than

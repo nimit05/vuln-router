@@ -247,3 +247,71 @@ if old in s:
 else:
     print("  Z3 assert already handled")
 PYEOF
+
+# --- 10. bound the extractor-synthesis refinement loop ---------------------
+# synthesize.py runs `while feedback is not None:` with no iteration cap. It exits
+# only when the synthesized parser is PERFECT on the spec examples. A model that
+# cannot reach perfection loops until SLURM walltime: Phi-4-mini-instruct reached
+# 593 refinement rounds on xss_sink in 33 minutes with no sign of converging
+# (job 2232), while Qwen2.5-Coder-7B needs 1 iteration and zero fixes.
+#
+# The paper's own worst observed case is claude-3 on the XSS sink extractor:
+# NFP 0.00%, max 30 fixes, avg 7.20 (Table 6). A cap of 40 therefore sits above
+# every convergence the paper reports, so it cannot truncate a run that would
+# have succeeded. On exhaustion we raise rather than return a broken parser: a
+# wrong extractor silently poisons every later phase, and "this model cannot do
+# Phase I" is itself the result we want recorded.
+python3 - "$SRC" <<'PYEOF'
+import io, sys
+p = sys.argv[1] + "/TSAgent/synthesis/synthesize.py"
+s = io.open(p, encoding="utf-8").read()
+if "LLMDFA_SYN_MAX_ITER" not in s:
+    if not s.startswith("import os"):
+        s = "import os\n" + s
+    old = "    iterations = 1\n    while feedback is not None:\n"
+    new = ('    iterations = 1\n'
+           '    _syn_cap = int(os.environ.get("LLMDFA_SYN_MAX_ITER", "40"))\n'
+           '    while feedback is not None:\n'
+           '        if iterations >= _syn_cap:\n'
+           '            raise RuntimeError(\n'
+           '                "[LLMDFA] extractor synthesis did not converge for %s after %d "\n'
+           '                "iterations (cap LLMDFA_SYN_MAX_ITER=%d). The paper\'s worst case "\n'
+           '                "is 30 fixes (Table 6); this model cannot synthesize this extractor."\n'
+           '                % (getattr(spec, "name", "?"), iterations, _syn_cap))\n')
+    assert old in s, "synthesize.py: refinement loop shape changed"
+    s = s.replace(old, new, 1)
+    io.open(p, "w", encoding="utf-8").write(s)
+    print("patched: synthesize.py refinement loop -> LLMDFA_SYN_MAX_ITER (default 40)")
+else:
+    print("  synthesize.py loop already bounded")
+PYEOF
+
+# --- 11. make seeded sampling reproducible across nodes --------------------
+# Section 7 shuffles self.all_single_files with a seeded Random, but that list
+# comes straight from a filesystem walk, whose order is not guaranteed stable
+# across nodes or filesystems. Same seed + different walk order = a different
+# sample, which silently breaks any cross-model comparison drawn on a sample.
+# Sorting first makes the seeded sample a pure function of (seed, benchmark).
+# Section 8's OFFSET/COUNT path already sorts, so this only fixes the seed path.
+python3 - "$SRC" <<'PYEOF'
+import io, sys
+p = sys.argv[1] + "/run_llmdfa.py"
+s = io.open(p, encoding="utf-8").read()
+old = ("        if _seed:\n"
+       "            import random\n"
+       "            random.Random(int(_seed)).shuffle(self.all_single_files)\n")
+new = ("        if _seed:\n"
+       "            import random\n"
+       "            # sort first: walk order is not stable across nodes, so an\n"
+       "            # unsorted seeded shuffle is not reproducible between runs\n"
+       "            self.all_single_files = sorted(self.all_single_files)\n"
+       "            random.Random(int(_seed)).shuffle(self.all_single_files)\n")
+if "walk order is not stable" in s:
+    print("  seeded sampling already sorted")
+elif old in s:
+    s = s.replace(old, new, 1)
+    io.open(p, "w", encoding="utf-8").write(s)
+    print("patched: run_llmdfa.py seeded sampling now sorts before shuffling")
+else:
+    raise SystemExit("run_llmdfa.py: seeded shuffle block shape changed")
+PYEOF
