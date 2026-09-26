@@ -1,0 +1,15 @@
+data/*.jsonl
+data/*.parquet
+data/raw/
+__pycache__/
+*.pyc
+
+# Phase B artefacts: regenerate with graphrouter/b0..b3b, do not commit
+data/gr/
+data/**/*.jsonl
+
+# Local-only: session notes, unrelated tool, upstream README images
+HANDOFF.md
+researchloop/
+third_party/HybridLLM/figures/
+.claude/

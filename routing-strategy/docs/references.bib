@@ -1,0 +1,140 @@
+% Cost-aware LLM routing for software vulnerability detection.
+% Venues verified 2026-09-03 against published proceedings / DBLP / OpenReview.
+% [main] top-tier main track | [ws] workshop | [j] journal
+
+% ---------- Predictive routing (decide before the call) ----------  [main]
+@inproceedings{ding2024hybridllm,
+  title     = {Hybrid {LLM}: Cost-Efficient and Quality-Aware Query Routing},
+  author    = {Ding, Dujian and Mallick, Ankur and Wang, Chi and Sim, Robert and
+               Mukherjee, Subhabrata and R{\"u}hle, Victor and
+               Lakshmanan, Laks V. S. and Awadallah, Ahmed Hassan},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}, note = {arXiv:2404.14618}
+}
+@inproceedings{ong2025routellm,
+  title     = {Route{LLM}: Learning to Route {LLM}s with Preference Data},
+  author    = {Ong, Isaac and Almahairi, Amjad and Wu, Vincent and Chiang, Wei-Lin
+               and Wu, Tianhao and Gonzalez, Joseph E. and Kadous, M Waleed and
+               Stoica, Ion},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2025}, note = {arXiv:2406.18665}
+}
+
+% ---------- Cascades (decide after a cheap call) ----------  [main] / [j]
+@inproceedings{yue2024cascades,
+  title     = {Large Language Model Cascades with Mixture of Thought
+               Representations for Cost-Efficient Reasoning},
+  author    = {Yue, Murong and Zhao, Jie and Zhang, Min and Du, Liang and Yao, Ziyu},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}, note = {arXiv:2310.03094}
+}
+@inproceedings{gupta2024tokenlevel,
+  title     = {Language Model Cascades: Token-Level Uncertainty and Beyond},
+  author    = {Gupta, Neha and Narasimhan, Harikrishna and Jitkrittum, Wittawat and
+               Rawat, Ankit Singh and Menon, Aditya Krishna and Kumar, Sanjiv},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}, note = {arXiv:2404.10136}
+}
+@inproceedings{aggarwal2024automix,
+  title     = {Auto{M}ix: Automatically Mixing Language Models},
+  author    = {Aggarwal, Pranjal and Madaan, Aman and Anand, Ankit and others},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024}, note = {arXiv:2310.12963}
+}
+@article{chen2024frugalgpt,
+  title   = {Frugal{GPT}: How to Use Large Language Models While Reducing Cost
+             and Improving Performance},
+  author  = {Chen, Lingjiao and Zaharia, Matei and Zou, James},
+  journal = {Transactions on Machine Learning Research (TMLR)},
+  year    = {2024}, note = {arXiv:2305.05176}
+}
+
+% ---------- Learning to defer / cost-sensitive selection ----------  [main]
+@inproceedings{mozannar2020defer,
+  title     = {Consistent Estimators for Learning to Defer to an Expert},
+  author    = {Mozannar, Hussein and Sontag, David},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  volume    = {119}, pages = {7076--7087}, year = {2020}
+}
+@inproceedings{madras2018defer,
+  title     = {Predict Responsibly: Improving Fairness and Accuracy by
+               Learning to Defer},
+  author    = {Madras, David and Pitassi, Toniann and Zemel, Richard},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2018}
+}
+@inproceedings{geifman2017selective,
+  title     = {Selective Classification for Deep Neural Networks},
+  author    = {Geifman, Yonatan and El-Yaniv, Ran},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2017}
+}
+
+% ---------- Calibration and distribution-free guarantees ----------  [main]
+@inproceedings{guo2017calibration,
+  title     = {On Calibration of Modern Neural Networks},
+  author    = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2017}
+}
+@inproceedings{angelopoulos2024crc,
+  title     = {Conformal Risk Control},
+  author    = {Angelopoulos, Anastasios N. and Bates, Stephen and Fisch, Adam and
+               Lei, Lihua and Schuster, Tal},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}, note = {Spotlight}
+}
+@inproceedings{quach2024conformallm,
+  title     = {Conformal Language Modeling},
+  author    = {Quach, Victor and Fisch, Adam and Schuster, Tal and Yala, Adam and
+               Sohn, Jae Ho and Jaakkola, Tommi S. and Barzilay, Regina},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}, note = {arXiv:2306.10193}
+}
+
+% ---------- Budgeted sequential decisions ----------  [main] / [j]
+@inproceedings{badanidiyuru2013bwk,
+  title     = {Bandits with Knapsacks},
+  author    = {Badanidiyuru, Ashwinkumar and Kleinberg, Robert and
+               Slivkins, Aleksandrs},
+  booktitle = {IEEE Symposium on Foundations of Computer Science (FOCS)},
+  year      = {2013}, note = {Journal version: J. ACM 65(3), 2018}
+}
+
+% ---------- Evaluation protocol ----------  [ws] / [j] / SE venue
+@inproceedings{hu2024routerbench,
+  title     = {Router{B}ench: A Benchmark for Multi-{LLM} Routing System},
+  author    = {Hu, Qitian Jason and Bieker, Jacob and Li, Xiuyu and Jiang, Nan and
+               Keigwin, Benjamin and Ranganath, Gaurav and Keutzer, Kurt and
+               Upadhyay, Shriyash Kaustubh},
+  booktitle = {Agentic Markets Workshop at the International Conference on
+               Machine Learning (ICML)},
+  year      = {2024},
+  note      = {WORKSHOP paper, not main track. arXiv:2403.12031}
+}
+@article{meinshausen2010stability,
+  title   = {Stability Selection},
+  author  = {Meinshausen, Nicolai and B{\"u}hlmann, Peter},
+  journal = {Journal of the Royal Statistical Society: Series B},
+  volume  = {72}, number = {4}, pages = {417--473}, year = {2010}
+}
+@inproceedings{allamanis2019duplication,
+  title     = {The Adverse Effects of Code Duplication in Machine Learning
+               Models of Code},
+  author    = {Allamanis, Miltiadis},
+  booktitle = {ACM SIGPLAN International Symposium on New Ideas, New Paradigms,
+               and Reflections on Programming and Software (Onward!)},
+  year      = {2019}
+}
+
+% ---------- Benchmark ----------  SE venue, flagged as such
+@inproceedings{ding2025primevul,
+  title     = {Vulnerability Detection with Code Language Models: How Far Are We?},
+  author    = {Ding, Yangruibo and Fu, Yanjun and Ibrahim, Omniyyah and
+               Sitawarin, Chawin and Chen, Xinyun and Alomair, Basel and
+               Wagner, David and Ray, Baishakhi and Chen, Yizheng},
+  booktitle = {IEEE/ACM International Conference on Software Engineering (ICSE)},
+  year      = {2025},
+  note      = {SE venue, not ICLR/NeurIPS/ICML. Cited for the benchmark and its
+               label-quality analysis. arXiv:2403.18624}
+}

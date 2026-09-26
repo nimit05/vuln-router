@@ -1,0 +1,16 @@
+--- third_party/HybridLLM/train_router.py	2026-09-14 15:42:18
++++ hybridllm/h5_train_router.py	2026-09-24 09:56:45
+@@ -26,6 +26,13 @@
+ from llm_blender.common.utils import empty2None, str2bool, seed_everything
+ 
+ loss2metric = {
++    # H5: upstream omits its own DEFAULT loss type from this dispatch
++    # table, so train_router.py cannot run with its own defaults.
++    # det_2cls is the 2-candidate case of det_ncls (argmax over
++    # candidates, then accuracy), so the n-class metric is correct.
++    # Inert for this project: every run passes --do_eval False, so
++    # compute_metrics is constructed but never called.
++    "det_2cls": compute_metrics_for_det_nclass,
+     "det_ncls": compute_metrics_for_det_nclass,
+     "det_nlabels": compute_metrics_for_det_nlabel,
+     "prob_2cls": compute_metrics_for_prob_2class,
