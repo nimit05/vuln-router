@@ -27,6 +27,10 @@ cannot answer (§6).
 | Verifier-triggered cascade (escalate when the Z3 script fails) | **Rejected.** Best variant costs 2.1× always-Phi to gain 0.028 F1 |
 | Mechanism: why the small model wins on branchy programs | **Confirmed, but it is not a size law** (§6f). Phi-4-mini emits 1.42 FP/case at `n_if>=12`; Qwen-7B emits 2.27 — the same as the 12B |
 | **The pre-registered split's own rule `n_if>=12 ? Qwen : Nemo` on held-out forms** (§6f) | **No — −0.008 F1** vs best fixed. It fails on the pre-registered holdout *and* on unseen forms; §4's diagnosis is confirmed, not excused |
+| **Relative cut beats the absolute `n_if>=12`** (§10) | **Never worse; +0.009/+0.010 where the branchiness distribution shifts** (CIs include 0), and the weakest matched-count z rises +2.4 → +3.0. `n_if>=12` transfers to off815 only because that family shares the fitted distribution (0.405 vs 0.409) |
+| **The rule beats a matched-count RANDOM split** (§9) | **Yes — z +5.5 / +4.4 / +2.3 on the three held-out probes**, beaten by 0.0-1.1% of 2,000 random splits; the reversed rule loses every time |
+| **The oracle headroom is real** (§9) | **No — the shuffled oracle scores HIGHER in all three probes (0.940 vs 0.805 on off815).** §8's "64% unclaimed" is not claimable; stop quoting the oracle as a target |
+| Honest headline margin (§9) | **+0.074 to +0.124** over the *deployable* fixed choice, all three CIs excluding 0. The +0.060 over the best-on-held-out-data model excludes 0 only on off815 |
 | **Which model pairs can carry the rule at all** (§6f) | **2 of 12** ordered pairs beat the best fixed model — both with Phi-4-mini on the branchy side. Reversing the direction costs −0.106 to −0.126, so the *sign* is real and the *substitutability* is not |
 
 The selected rule is a single comparison, computable from source in
@@ -605,11 +609,13 @@ python3 LLMDFA/scripts/route_eval.py        # Pareto filter + stability selectio
 
 ## 8. Open
 
-* **Threshold transfer is the live weakness** (§6e). Direction transfers; the cut
+* ~~**Threshold transfer is the live weakness** (§6e). Direction transfers; the cut
   point does not. Test a relative formulation (per-corpus branch-count quantile)
-  against the absolute `n_if>=12` across all three held-out conditions — if the
-  relative form is stable where the absolute one drifts, that is the deployable
-  rule and the stronger claim.
+  against the absolute `n_if>=12` across all three held-out conditions.~~
+  **Tested in §10. The relative form (branchiest 40.9%, q from the fitted corpus)
+  is never worse, gains +0.009/+0.010 on the family where the distribution
+  shifts — intervals including zero — and raises the weakest matched-count z
+  from +2.4 to +3.0. Adopt it for transferability, not for the F1.**
 * ~~Qwen2.5-Coder-7B was not run at offset 815~~ — **answered by job 2418 (§6f):
   the pre-registered rule loses on held-out forms too (−0.008), because Qwen has
   none of the low-false-alarm behaviour on branchy code that the rule monetises.**
@@ -619,10 +625,166 @@ python3 LLMDFA/scripts/route_eval.py        # Pareto filter + stability selectio
   more small models (Llama-3.2-3B, Gemma-3-4B, Qwen3-4B) at offset 815 can
   separate those, and the answer decides whether the rule is a recipe or an
   anecdote about one checkpoint.
-* The 4-model oracle is **0.805** vs the deployed rule's 0.699 (§6f), so 64% of
-  the per-case headroom over four models is still unclaimed by a depth-1 rule.
+* ~~The 4-model oracle is **0.805** vs the deployed rule's 0.699 (§6f), so 64% of
+  the per-case headroom over four models is still unclaimed by a depth-1 rule.~~
+  **Answered in §9, negatively: the shuffled oracle reaches 0.940, so that
+  headroom is models erring on different cases by chance and no router can
+  take it. The depth-1 rule is near the ceiling of per-case model choice.**
 * The rule is depth-1 by choice — with 195 select DBZ cases, deeper trees overfit
   faster than they help. Revisit only if held-out DBZ coverage grows.
 * Whether the same shape (**cheap model on the expensive complex work, large
   model on the cheap simple work**) recurs in IRIS and RepoAudit. One system is a
   curiosity; three would be a finding.
+
+---
+
+## 9. Null battery — what survives, and what does not
+
+Added 2026-09-18. The sibling routing-strategy project adopted a set of
+reporting rules in September, after two apparent wins and one oracle "headroom"
+all evaporated once the right null was attached (its `docs/PROGRESS.md`, E2, E8,
+E13). Everything above predates those rules, so it was re-checked against them.
+No new GPU hours. Script: [`../scripts/null_router.py`](../scripts/null_router.py).
+
+```
+export LLMDFA_BENCH=/path/to/LLMDFA/benchmark
+python3 scripts/null_router.py --suffix off815 --lo Nemo --hi Phi --thr 12
+```
+
+Four questions, and why each is asked:
+
+1. **Does the rule do work, or only the mixing proportion?** Send the same
+   *number* of cases to the small model, chosen at random, 2,000 times. A rule
+   carrying no information scores what an arbitrary split of the same size
+   scores. This is the matched-count null, the one that killed the precision
+   results in the sibling project.
+2. **How wide is the interval on 111 cases?** Bootstrap over cases. Reported
+   twice, because "over the best fixed model" is ambiguous: *hindsight* compares
+   against whichever fixed model wins on the held-out data — not a choice anyone
+   could have made in advance — while *deployable* compares against Phi, which
+   is what the fitted `float_*` data would have told you to pick.
+3. **Is one form carrying the other two?** Per-form breakdown.
+4. **Is the oracle headroom real?** Compare the oracle against an oracle over
+   models whose per-case outcomes have been permuted — preserving each model's
+   own true and false positive totals, destroying only the alignment between
+   them.
+
+### Results
+
+| probe | router | best fixed | vs best fixed (95% CI) | vs Phi, deployable (95% CI) | matched-count random | forms won |
+|---|---|---|---|---|---|---|
+| off815 (4 models) | 0.699 | 0.639 | **+0.060** [+0.009, +0.100] | **+0.124** [+0.081, +0.173] | 0.615 ± 0.015, **z +5.5** | 3/3 |
+| off1481 | 0.691 | 0.649 | +0.042 [−0.001, +0.088] | **+0.097** [+0.053, +0.142] | 0.631 ± 0.014, **z +4.4** | 3/3 |
+| fam2 | 0.714 | 0.698 | +0.015 [−0.021, +0.050] | **+0.074** [+0.023, +0.130] | 0.681 ± 0.015, **z +2.3** | 2/3 |
+
+**The rule survives.** It beats a matched-count random split in 3 of 3 held-out
+conditions, beaten by 0.0%, 0.0% and 1.1% of 2,000 random splits respectively.
+Reversing it — large model on the branchy side — scores 0.532, 0.566 and 0.635,
+below the random-split mean every time. The *sign* is information, not a coin
+that landed the same way three times.
+
+**The margin depends on which comparison is honest.** Against the fixed model
+that wins on the held-out data, only off815 excludes zero; the other two are
+positive but not significant at n=111. Against the fixed model the fitted data
+would actually have selected, all three exclude zero. The second is the
+deployable comparison — §6d already showed that picking a fixed model from
+fitted data is the thing that does not transfer — so the honest headline is
+**+0.074 to +0.124 over the deployable fixed choice**, not +0.060 over a model
+you could only have chosen with hindsight.
+
+### The oracle headroom is not real — do not chase it
+
+| probe | real oracle | shuffled oracle | excess |
+|---|---|---|---|
+| off815 (4 models) | 0.805 | **0.940 ± 0.013** | **−0.135** |
+| off1481 (2 models) | 0.754 | 0.825 ± 0.014 | −0.071 |
+| fam2 (2 models) | 0.791 | 0.856 ± 0.013 | −0.065 |
+
+In every condition the oracle sits *below* what models with the same error
+volumes and no per-case alignment would produce. The models fail on the *same*
+cases more often than independence would give — as the sibling project measured
+on IRIS and on RouterBench (36,497 prompts × 11 models), and as RouteGuard
+(arXiv 2608.07583) proves follows generically from shared pretraining.
+
+**This answers the fourth bullet of §8 with a no.** That bullet reads: the
+4-model oracle is 0.805 against the deployed rule's 0.699, so 64% of the
+per-case headroom is still unclaimed. That 64% is not there to claim. It is the
+residue of four models guessing differently, and no router — deeper tree, better
+features, more models — can convert it. **The depth-1 rule is not leaving a
+large prize on the table; it is near the ceiling of what per-case model choice
+can deliver here.** Future versions of this document should carry the
+shuffled-oracle row next to any oracle row, and should not quote an oracle as a
+target.
+
+### What this changes
+
+Nothing about the deployed rule, which is now the better-supported half of this
+document: it is the only routing result in either project that passes the null
+battery. What changes is the framing — quote the deployable margin, retire the
+oracle as a target, and treat §8's threshold-transfer weakness as the live
+question — which §10 now takes up.
+
+---
+
+## 10. The threshold: absolute vs relative
+
+§8's first bullet called threshold transfer the live weakness — the direction
+transfers to every held-out condition but the cut point does not, and `12` is
+measurably off-centre on the second form family. Tested here. No GPU.
+Script: [`../scripts/relative_threshold.py`](../scripts/relative_threshold.py).
+
+**The relative rule.** Instead of a fixed `n_if >= 12`, route the branchiest *q*
+of whatever corpus you are given. `q` comes from the fitted `float_*` DBZ corpus
+alone — the fraction of it with `n_if >= 12`, which is **0.409** — so the
+relative rule is exactly as blind to the held-out data as the absolute one.
+Cases tied on `n_if` route together; splitting a tie by filename would let a
+naming convention decide which model sees a program.
+
+**Why there is anything to fix.** The fitted corpus and the second family have
+genuinely different shapes:
+
+| corpus | median n_if | p75 | fraction >= 12 |
+|---|---|---|---|
+| fitted (`float_*`, 286 cases) | 9 | 17 | 0.409 |
+| off815 (`int_*` family 1) | 9 | 17 | 0.405 |
+| family 2 (off1481 / fam2) | **3** | 14 | 0.360 |
+
+`n_if >= 12` transfers to off815 for a reason closer to luck than to design:
+that family happens to share the fitted branchiness distribution almost exactly.
+On family 2 the median falls from 9 to 3 and the absolute cut lands in the wrong
+place.
+
+**Result.**
+
+| probe | rule | cut | → small | F1 | vs Phi | matched-count random | z |
+|---|---|---|---|---|---|---|---|
+| off815 | absolute | 12 | 45 | 0.699 | +0.124 | 0.615 | +5.5 |
+| off815 | relative | 13 | 45 | 0.699 | +0.124 | 0.615 | +5.3 |
+| off1481 | absolute | 12 | 40 | 0.691 | +0.097 | 0.631 | +4.3 |
+| off1481 | **relative** | **9** | 44 | **0.701** | **+0.107** | 0.629 | **+5.0** |
+| fam2 | absolute | 12 | 40 | 0.714 | +0.074 | 0.679 | +2.4 |
+| fam2 | **relative** | **9** | 44 | **0.723** | **+0.083** | 0.679 | **+3.0** |
+
+Paired bootstrap of (relative − absolute), 2,000 resamples over cases:
+
+| probe | difference | 95% CI | relative wins |
+|---|---|---|---|
+| off815 | +0.000 | [+0.000, +0.000] | — (selects the identical 45 cases) |
+| off1481 | +0.010 | [−0.011, +0.037] | 75% of resamples |
+| fam2 | +0.009 | [−0.002, +0.024] | 92% of resamples |
+
+**Verdict: adopt the relative form, but not because of the F1 gain.** The gain
+is +0.009 to +0.010 on family 2 and its interval includes zero at n=111 — and
+off1481 and fam2 are the *same 111 cases under two engines*, so that is one
+piece of evidence, not two. The case for the relative form is that it is **never
+worse**, that it lifts the weakest matched-count z from +2.4 to +3.0 (and +4.3
+to +5.0), and that it has no parameter tied to one corpus's absolute
+branchiness — which is what "transfers" has to mean. The absolute rule's clean
+run on off815 is a distributional coincidence, and the table above is what makes
+that visible.
+
+**It recovers part of the drift, not all of it.** The probe-fitted optimum on
+family 2 is around `n_if >= 6` (F1 0.708 / 0.743); the relative rule reaches 9
+without seeing the data, against the absolute rule's 12. Closing the rest would
+need a cut chosen from something other than the corpus's own branch-count
+distribution, and there is no evidence yet about what that should be.

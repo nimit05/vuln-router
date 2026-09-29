@@ -918,6 +918,39 @@ keeping few alerts, measured on IRIS's own alert stream.
 
 ---
 
+### E20 — GraphRouter v2 and the first skilled model on IRIS (GPU run, gpu0, 2026-09-26)
+
+Full write-up: [`10-graphrouter-v2.md`](10-graphrouter-v2.md).
+
+* **Objective fix works as designed.** Security-utility edge target (rho = 10)
+  instead of `argmax(effect)`: 0.198 → 0.218 on the old pool, but the same-mix
+  random router scores 0.222. With a skilled model present, the router picks it.
+* **Positive control found.** Qwen3-32B no-think: within-project AUC 0.868
+  [0.845, 0.892], 0.810 at sink-method level, recall@10 0.678 vs random 0.304 and
+  0.463 vs 0.098 where the budget binds. It passes the E19 control. Qwen3-8B no-think
+  0.687 at 0.23 GPU-s. Think mode is worse (0.696 vs 0.835) at ~55x cost. This
+  overturns E18 for IRIS: on paired PrimeVul the 32B failed, on IRIS it works.
+* **Per-path routing still adds nothing.** Every routed configuration ties a
+  same-mix random router on the fixed-budget metric. The skilled models fail on the
+  same paths (both wrong 15.0% vs 10.6% independent; pair oracle 0.850 < shuffled 0.904).
+  The one AvgF1 "win" (z +6.4) is one path in antisamy-2017, and antisamy-2016/2017
+  are the same repo, so leave-one-project-out leaks between them.
+* **What works is a cascade, not a learned router.** Qwen3-8B on every path, its
+  top 30% per project to the 32B: all-32B quality (recall@10 0.677 vs 0.678) at 50%
+  of the cost, z +4.5 over random escalation. On IRIS's table at k = 10: AvgF1 0.374,
+  10/16, FDR 65.71, next to the paper's IRIS + GPT-4 (0.366, 10/16, 65.69). GraphRouter
+  v3 (given the 8B's score) re-learns this rule and never beats it.
+* **No second skilled family among local models:** Mistral-Nemo-12B 0.462,
+  gpt-oss-20b 0.613, phi-4 0.610. All err on the same paths as the 32B.
+* **Memorisation control (2026-09-27, D6).** Project names hidden (names used in <5
+  of 79 repos renamed): 32B 0.868 → 0.795; strict (only everyday Java kept, no
+  comments/strings) 0.719. Rerun noise ±0.002. Text4Shell does not drop at all
+  (0.948 → 0.970), so the loss looks like helpful names, not recalled CVEs. The 8B
+  falls to chance (0.544 / 0.511): its skill is names. Main claim stands: IRIS's AvgF1
+  ranks deepseek-6.7b (AUC 0.489) above the 32B (0.795 with its project hidden).
+
+---
+
 ### Where that leaves the project
 
 Two independent walls, both measured:
