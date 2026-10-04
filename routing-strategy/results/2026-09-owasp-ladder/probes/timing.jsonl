@@ -1,0 +1,16 @@
+{"model": "qwen3-8b-nothink", "wall_s": 86, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen3-32b-nothink", "wall_s": 361, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen3-8b-nothink", "units_file": "owasp_anon", "wall_s": 65, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen3-32b-nothink", "units_file": "owasp_anon", "wall_s": 274, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen-7b-verbose", "units_file": "owasp", "wall_s": 84, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "granite-8b-verbose", "units_file": "owasp", "wall_s": 121, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "deepseek-6.7b-verbose-tokbug", "units_file": "owasp", "wall_s": 235, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "phi-3.8b-verbose", "units_file": "owasp", "wall_s": 51, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen-1.5b-verbose", "units_file": "owasp", "wall_s": 24, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "gpt-oss-20b-low", "units_file": "owasp", "wall_s": 563, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "phi-4-verbose", "units_file": "owasp", "wall_s": 596, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "nemo-12b-nothink", "units_file": "owasp", "wall_s": 143, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "deepseek-6.7b-verbose", "units_file": "owasp", "wall_s": 300, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen3-1.7b-nothink", "units_file": "owasp", "wall_s": 26, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "gpt-oss-20b-low", "units_file": "owasp_anon", "wall_s": 120, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "gpt-oss-120b-low", "units_file": "owasp", "wall_s": 305, "units": 1956, "gpu": "A100-SXM4-80GB x1", "workers": 32}

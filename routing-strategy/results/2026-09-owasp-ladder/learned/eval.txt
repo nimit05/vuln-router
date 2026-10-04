@@ -1,0 +1,92 @@
+calibration of P(model right) on test (per model: AUC / ECE)
+  emb-lr    mean AUC 0.824  mean ECE 0.052   deepseek:0.67/0.05  gpt-oss:0.82/0.02  gpt-oss:0.77/0.03  granite:0.93/0.04  nemo:0.90/0.07  phi:0.89/0.03  phi:0.87/0.05  qwen-1.5b:0.81/0.10  qwen-7b:0.81/0.09  qwen3-1.7b:0.86/0.05  qwen3-32b:0.82/0.06  qwen3-8b:0.74/0.05
+  ft-s0     mean AUC 0.931  mean ECE 0.034   deepseek:0.75/0.05  gpt-oss:0.96/0.02  gpt-oss:0.88/0.04  granite:0.99/0.02  nemo:0.99/0.04  phi:0.98/0.03  phi:0.95/0.03  qwen-1.5b:0.98/0.02  qwen-7b:0.95/0.06  qwen3-1.7b:0.97/0.04  qwen3-32b:0.92/0.03  qwen3-8b:0.87/0.05
+  ft-s1     mean AUC 0.927  mean ECE 0.035   deepseek:0.76/0.04  gpt-oss:0.96/0.02  gpt-oss:0.88/0.04  granite:0.99/0.03  nemo:0.98/0.03  phi:0.98/0.04  phi:0.95/0.03  qwen-1.5b:0.96/0.02  qwen-7b:0.94/0.05  qwen3-1.7b:0.96/0.02  qwen3-32b:0.92/0.04  qwen3-8b:0.85/0.05
+  ft-s2     mean AUC 0.929  mean ECE 0.038   deepseek:0.77/0.06  gpt-oss:0.94/0.03  gpt-oss:0.86/0.03  granite:0.99/0.02  nemo:0.98/0.03  phi:0.99/0.03  phi:0.95/0.02  qwen-1.5b:0.98/0.03  qwen-7b:0.94/0.06  qwen3-1.7b:0.97/0.03  qwen3-32b:0.92/0.04  qwen3-8b:0.86/0.09
+  ft-s1g7   mean AUC 0.927  mean ECE 0.034   deepseek:0.75/0.04  gpt-oss:0.96/0.02  gpt-oss:0.88/0.04  granite:0.99/0.03  nemo:0.98/0.02  phi:0.98/0.04  phi:0.95/0.03  qwen-1.5b:0.96/0.02  qwen-7b:0.94/0.05  qwen3-1.7b:0.96/0.02  qwen3-32b:0.92/0.04  qwen3-8b:0.85/0.04
+  ft-s2g7   mean AUC 0.929  mean ECE 0.037   deepseek:0.76/0.05  gpt-oss:0.94/0.03  gpt-oss:0.86/0.04  granite:0.99/0.02  nemo:0.98/0.03  phi:0.99/0.03  phi:0.95/0.02  qwen-1.5b:0.98/0.03  qwen-7b:0.94/0.06  qwen3-1.7b:0.97/0.03  qwen3-32b:0.92/0.03  qwen3-8b:0.86/0.09
+
+lam = 0.0
+  router                      acc tpr-fpr  gpu_s  reward z(mix)            - best            - cat            - knn
+  best:gpt-oss-120b-low     0.905   0.787  0.156   0.905   -0.0                                                    
+  cat                       0.934   0.830  0.137   0.934    8.7                                                    
+  base-rate trick           0.922   0.794  0.135   0.922                                                           
+  knn(k=20)                 0.935   0.850  0.125   0.935    8.2                                                    
+  learned emb-lr            0.942   0.845  0.120   0.942   10.8   [+0.017,+0.060]  [-0.007,+0.022]  [-0.010,+0.026]
+  learned ft-s0             0.971   0.927  0.126   0.971   16.7   [+0.043,+0.090]  [+0.017,+0.058]  [+0.015,+0.058]
+  learned ft-s1             0.978   0.942  0.086   0.978   19.6   [+0.051,+0.095]  [+0.027,+0.063]  [+0.024,+0.063]
+  learned ft-s2             0.978   0.940  0.079   0.978   18.1   [+0.051,+0.095]  [+0.026,+0.063]  [+0.024,+0.063]
+  learned ft-s1g7           0.978   0.942  0.086   0.978   19.6   [+0.051,+0.095]  [+0.027,+0.063]  [+0.024,+0.063]
+  learned ft-s2g7           0.980   0.944  0.080   0.980   18.2   [+0.053,+0.097]  [+0.027,+0.065]  [+0.026,+0.065]
+
+lam = 0.25
+  router                      acc tpr-fpr  gpu_s  reward z(mix)            - best            - cat            - knn
+  best:gpt-oss-20b-low      0.869   0.741  0.061   0.854   -0.0                                                    
+  cat                       0.935   0.833  0.081   0.915    9.4                                                    
+  base-rate trick           0.881   0.735  0.052   0.868                                                           
+  knn(k=50)                 0.930   0.833  0.081   0.910    9.0                                                    
+  learned emb-lr            0.932   0.825  0.084   0.911   11.4   [+0.030,+0.085]  [-0.021,+0.012]  [-0.016,+0.018]
+  learned ft-s0             0.973   0.925  0.036   0.964   20.4   [+0.081,+0.140]  [+0.028,+0.070]  [+0.033,+0.075]
+  learned ft-s1             0.974   0.932  0.061   0.959   18.3   [+0.079,+0.132]  [+0.025,+0.063]  [+0.029,+0.070]
+  learned ft-s2             0.980   0.942  0.042   0.969   18.9   [+0.089,+0.142]  [+0.036,+0.073]  [+0.041,+0.078]
+  learned ft-s1g7           0.974   0.932  0.060   0.959   18.4   [+0.079,+0.133]  [+0.025,+0.063]  [+0.029,+0.070]
+  learned ft-s2g7           0.981   0.947  0.042   0.971   19.1   [+0.091,+0.144]  [+0.038,+0.075]  [+0.042,+0.080]
+
+lam = 1.0
+  router                      acc tpr-fpr  gpu_s  reward z(mix)            - best            - cat            - knn
+  best:gpt-oss-20b-low      0.869   0.741  0.061   0.808   -0.0                                                    
+  cat                       0.913   0.792  0.055   0.858    9.1                                                    
+  base-rate trick           0.889   0.724  0.047   0.842                                                           
+  knn(k=20)                 0.932   0.836  0.058   0.874   10.9                                                    
+  learned emb-lr            0.917   0.782  0.050   0.867   12.1   [+0.029,+0.089]  [-0.013,+0.029]  [-0.028,+0.012]
+  learned ft-s0             0.969   0.918  0.025   0.944   21.3   [+0.109,+0.167]  [+0.062,+0.110]  [+0.050,+0.092]
+  learned ft-s1             0.959   0.895  0.033   0.926   19.0   [+0.091,+0.147]  [+0.044,+0.092]  [+0.030,+0.075]
+  learned ft-s2             0.968   0.911  0.025   0.943   20.6   [+0.108,+0.163]  [+0.063,+0.106]  [+0.049,+0.089]
+  learned ft-s1g7           0.959   0.895  0.033   0.926   19.0   [+0.090,+0.148]  [+0.044,+0.092]  [+0.030,+0.076]
+  learned ft-s2g7           0.973   0.925  0.025   0.948   20.9   [+0.113,+0.169]  [+0.067,+0.113]  [+0.054,+0.096]
+
+lam = 4.0
+  router                      acc tpr-fpr  gpu_s  reward z(mix)            - best            - cat            - knn
+  best:gpt-oss-20b-low      0.869   0.741  0.061   0.624    0.0                                                    
+  cat                       0.913   0.792  0.055   0.693    9.1                                                    
+  base-rate trick           0.867   0.634  0.037   0.720                                                           
+  knn(k=20)                 0.898   0.757  0.043   0.725   10.6                                                    
+  learned emb-lr            0.876   0.690  0.032   0.750   13.4   [+0.090,+0.158]  [+0.029,+0.084]  [-0.002,+0.051]
+  learned ft-s0             0.954   0.888  0.018   0.881   21.7   [+0.227,+0.290]  [+0.161,+0.215]  [+0.128,+0.183]
+  learned ft-s1             0.949   0.871  0.018   0.876   21.7   [+0.222,+0.282]  [+0.156,+0.210]  [+0.124,+0.178]
+  learned ft-s2             0.942   0.856  0.017   0.874   21.1   [+0.218,+0.281]  [+0.153,+0.209]  [+0.121,+0.177]
+  learned ft-s1g7           0.949   0.871  0.018   0.876   21.7   [+0.222,+0.282]  [+0.155,+0.210]  [+0.123,+0.178]
+  learned ft-s2g7           0.944   0.861  0.017   0.875   21.1   [+0.219,+0.283]  [+0.155,+0.210]  [+0.122,+0.178]
+
+direct classifier direct-ft (no LLM; answer = P(vulnerable) > 0.5), GPU-s ~0
+  test                                 acc 0.997  tpr-fpr 0.995  AUC 1.000
+  leave-one-category-out, all units    acc 0.876  tpr-fpr 0.722  AUC 0.904
+  leave-one-category-out, cats >= 30   acc 0.875
+
+direct classifier direct-lr (no LLM; answer = P(vulnerable) > 0.5), GPU-s ~0
+  test                                 acc 0.903  tpr-fpr 0.772  AUC 0.961
+  leave-one-category-out, all units    acc 0.746  tpr-fpr 0.411  AUC 0.782
+  leave-one-category-out, cats >= 30   acc 0.747
+
+leave-one-category-out (categories with >= 30 units; pooled reward over held-out units)
+    lam  best single  knn(k=20)     learned emb-lr      learned ft-s0      learned ft-s1      learned ft-s2    learned ft-s1g7    learned ft-s2g7
+   0.00        0.901      0.865              0.852              0.919                nan                nan              0.944              0.923
+   0.25        0.842      0.826              0.805              0.905                nan                nan              0.918              0.895
+   1.00        0.819      0.785              0.749              0.886                nan                nan              0.867              0.861
+   4.00        0.635      0.628              0.640              0.799                nan                nan              0.793              0.796
+  lam 0.00 emb-lr     - best single -0.049 [-0.063, -0.034]
+  lam 0.00 ft-s0      - best single +0.019 [+0.007, +0.030]
+  lam 0.00 ft-s1g7    - best single +0.043 [+0.030, +0.056]
+  lam 0.00 ft-s2g7    - best single +0.023 [+0.009, +0.035]
+  lam 0.25 emb-lr     - best single -0.037 [-0.056, -0.018]
+  lam 0.25 ft-s0      - best single +0.063 [+0.046, +0.079]
+  lam 0.25 ft-s1g7    - best single +0.076 [+0.060, +0.093]
+  lam 0.25 ft-s2g7    - best single +0.053 [+0.037, +0.070]
+  lam 1.00 emb-lr     - best single -0.071 [-0.091, -0.052]
+  lam 1.00 ft-s0      - best single +0.067 [+0.050, +0.083]
+  lam 1.00 ft-s1g7    - best single +0.047 [+0.031, +0.065]
+  lam 1.00 ft-s2g7    - best single +0.042 [+0.026, +0.058]
+  lam 4.00 emb-lr     - best single +0.005 [-0.018, +0.027]
+  lam 4.00 ft-s0      - best single +0.164 [+0.145, +0.183]
+  lam 4.00 ft-s1g7    - best single +0.157 [+0.139, +0.176]
+  lam 4.00 ft-s2g7    - best single +0.161 [+0.143, +0.177]

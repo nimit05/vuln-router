@@ -1,0 +1,57 @@
+IRIS-16 per vulnerability: 9 CVEs with both real and false paths (343 real, 1823 false paths)
+  share = false alarms read before the first real path / false paths in the project; mean over CVEs, 95% bootstrap CI over CVEs
+  r@10* = the old path-level recall@10, for comparison
+
+  ranker                                    gpu_s  found@1/5/10 (of 9)  medIFA  share read before hit   r@10*
+  random order (exact expectation)          0.000   1.5  4.7   6.6     6.8  0.159 [0.072,0.257]        
+  qwen3-1.7b-nothink                        0.009   3.0  5.0   6.0     4.2  0.222 [0.032,0.431]   0.433
+  qwen-1.5b-verbose                         0.010   0.0  1.0   4.0    18.0  0.296 [0.150,0.493]   0.358
+  phi-3.8b-verbose                          0.018   1.0  1.0   3.0    11.0  0.327 [0.129,0.545]   0.156
+  qwen-7b-verbose                           0.025   0.0  4.0   8.0     5.0  0.162 [0.066,0.271]   0.462
+  qwen3-8b-nothink                          0.025   5.0  8.0   8.0     0.6  0.090 [0.011,0.210]   0.603
+  gpt-oss-20b-low                           0.052   3.0  7.0   8.0     1.0  0.059 [0.008,0.134]   0.452
+  nemo-12b-nothink                          0.053   3.0  7.0   7.0     4.0  0.203 [0.065,0.360]   0.300
+  granite-8b-verbose                        0.065   1.0  3.0   5.0     7.0  0.267 [0.072,0.496]   0.315
+  gpt-oss-120b-low                          0.113   0.0  6.0   8.0     2.4  0.115 [0.030,0.218]   0.381
+  qwen3-32b-nothink                         0.115   6.0  7.0   9.0     0.0  0.052 [0.001,0.126]   0.690
+  deepseek-6.7b-verbose                     0.190   1.0  5.0   6.0     4.3  0.237 [0.041,0.445]   0.345
+  phi-4-verbose                             0.331   3.0  4.0   6.0     7.3  0.196 [0.044,0.381]   0.282
+
+  8B->32B, fixed f = 0.30 (hindsight) (30% up)  0.059   5.0  7.0   9.0     0.0  0.041 [0.001,0.092]   0.691
+  8B->32B, LOPO f (E26 rule) (29% up)       0.059   5.0  7.0   9.0     0.0  0.041 [0.001,0.092]   0.648
+  8B->32B, stop rule batch 10, patience 1 (20% up)  0.048   6.0  7.0   9.0     0.0  0.058 [0.000,0.127]   0.694
+  8B->32B, stop rule batch 10, patience 2 (25% up)  0.054   6.0  8.0   9.0     0.0  0.052 [0.000,0.126]   0.693
+  8B->32B, stop rule batch 5, patience 1 (12% up)  0.038   6.0  7.0   8.0     0.0  0.109 [0.000,0.226]   0.690
+  8B->32B, stop rule batch 20, patience 1 (27% up)  0.056   6.0  8.0   9.0     0.0  0.052 [0.000,0.126]   0.693
+
+per CVE: false alarms before the first real path
+  CVE                                          paths real r@10 cap  random     8B    32B   stop   LOPO
+  ff4j_CVE-2022-44262_1.8.13                    1413  181     0.06     6.8    0.0    6.0    0.0    5.0
+  commons-text_CVE-2022-42889_1.9                230   36     0.28     5.2    0.0    0.0    0.0    0.0
+  esapi-java-legacy_CVE-2022-24891_2.2.3.1       198   99     0.10     1.0   51.2    0.0    6.0    6.0
+  plexus-utils_CVE-2022-4244_3.0.23              152    8     1.00    16.0    4.0    0.0    0.0    0.0
+  zt-zip_CVE-2018-1002201_1.12                    71    7     1.00     8.0    0.6    0.0    0.0    0.0
+  antisamy_CVE-2017-14735_1.5.6                   33    4     1.00     5.8    2.9    0.0    0.0    0.0
+  plexus-archiver_CVE-2018-1002200_3.5            30    3     1.00     6.8    0.0    0.0    0.0    0.0
+  cron-utils_CVE-2021-41269_9.1.5                 26    1     1.00    12.5    4.0    6.0    6.0    2.0
+  workflow-cps-global-lib-plugin_CVE-2022-2517    13    4     1.00     1.8    0.0    2.0    2.0    2.0
+  stop vs 32B: fewer false alarms first on 1 CVEs, same on 7, more on 1
+  stop vs 8B: fewer false alarms first on 4 CVEs, same on 3, more on 2
+  32B vs 8B: fewer false alarms first on 4 CVEs, same on 2, more on 3
+  8B vs random: fewer false alarms first on 8 CVEs, same on 0, more on 1
+  32B vs random: fewer false alarms first on 8 CVEs, same on 0, more on 1
+
+E20 runs (other prompt), identifiers kept / renamed / strict renamed (also comments, strings)
+  ranker                                    gpu_s  found@1/5/10 (of 9)  medIFA  share read before hit   r@10*
+  original: 8B                              0.025   4.0  7.0   8.0     2.0  0.115 [0.026,0.233]   0.616
+  original: 32B                             0.115   6.0  7.0   9.0     0.0  0.052 [0.000,0.126]   0.691
+  original: fixed f = 0.30                  0.059   5.0  8.0   9.0     0.0  0.041 [0.001,0.092]   0.689
+  original: stop rule (18% up)              0.046   6.0  7.0   8.0     0.0  0.109 [0.000,0.225]   0.690
+  renamed: 8B                               0.025   4.0  9.0   9.0     1.0  0.040 [0.006,0.083]   0.621
+  renamed: 32B                              0.115   3.0  7.0   9.0     1.0  0.053 [0.008,0.114]   0.653
+  renamed: fixed f = 0.30                   0.059   5.0  8.0   8.0     0.0  0.040 [0.001,0.089]   0.601
+  renamed: stop rule (20% up)               0.048   3.0  8.0   9.0     1.0  0.052 [0.007,0.113]   0.663
+  strict renamed: 8B                        0.025   2.0  5.0   7.0     4.0  0.108 [0.055,0.173]   0.484
+  strict renamed: 32B                       0.115   5.0  8.0   8.0     0.0  0.054 [0.001,0.143]   0.581
+  strict renamed: fixed f = 0.30            0.059   4.0  7.0   8.0     1.0  0.031 [0.008,0.058]   0.502
+  strict renamed: stop rule (21% up)        0.049   4.0  6.0   6.0     1.0  0.039 [0.007,0.075]   0.560

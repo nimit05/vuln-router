@@ -949,6 +949,132 @@ Full write-up: [`10-graphrouter-v2.md`](10-graphrouter-v2.md).
   falls to chance (0.544 / 0.511): its skill is names. Main claim stands: IRIS's AvgF1
   ranks deepseek-6.7b (AUC 0.489) above the 32B (0.795 with its project hidden).
 
+### E21 — Findings consolidated, raw outputs tracked (2026-09-28)
+
+* Plain-language summary of E20, the LLMDFA router, and the proposed
+  "test the signal, then route" strategy: [`11-findings-summary.md`](11-findings-summary.md).
+* Raw model outputs and router results now tracked in
+  [`../results/2026-09-skilled-cascade/`](../results/2026-09-skilled-cascade/); they
+  reproduce the E20 numbers with `d4_skilled_combos.py` and `d6_compare.py`.
+* Recorded caveats: the 30% escalation share was chosen after seeing the sweep (every
+  share beats random escalation; fix it leave-one-project-out before reporting), and
+  the cascade *matches* the paper's GPT-4 AvgF1 (0.374 vs 0.366), it does not beat it.
+* Scaled run paused: 57/96 new DBs built, spec inference and the OWASP probes not run.
+
+### E22 — OWASP model ladder and per-unit routers (GPU run, gpu7, 2026-09-29)
+
+Full write-up: [`12-owasp-ladder.md`](12-owasp-ladder.md). Raw outputs:
+[`../results/2026-09-owasp-ladder/`](../results/2026-09-owasp-ladder/).
+
+* 12 models on 1,956 OWASP Benchmark units (CodeQL alerts, 65% real), 70/30 split.
+  Ladder: Qwen3-1.7B AUC 0.447 (chance) → Qwen3-8B 0.717 → Qwen3-32B 0.841 →
+  gpt-oss-120b 0.907 (acc 0.902, 0.156 GPU-s). gpt-oss-20b nearly matches it (AUC 0.912,
+  acc 0.881) at 0.061 GPU-s.
+* Memorisation control: names hidden, AUC unchanged (gpt-oss-20b 0.912 → 0.914, 32B
+  0.841 → 0.835, 8B 0.717 → 0.705).
+* Routers beat the best single model on test: all 12 models, λ = 1, kNN 0.932 acc at
+  0.058 GPU-s vs gpt-oss-120b 0.905 at 0.156 (reward gain +0.041 to +0.091); ladder only,
+  category router 0.929 vs 0.905. All beat random same-mix routing (z 5.6-10.8).
+* The gain is mostly category-level: at λ = 0, 0.905 → 0.922 from answering "always yes"
+  in high-base-rate categories (no model), → 0.934 from a better model per category;
+  per-unit kNN adds ~0 over the category router at λ = 0 and +0.02-0.03 at λ ≥ 1.
+* Does not transfer: leave-one-category-out, every router loses to the best single
+  model (λ = 0: 0.901 vs kNN 0.847). Confidence cascades never beat the best model.
+* Run defects fixed: gpt-oss-20b straggler run (cost from clean rerun); DeepSeek
+  tokenizer (`PreTrainedTokenizerFast`), 53% unreadable verdicts before the fix.
+
+### E23 — Our own Jev-style router, trained on the saved outcomes (gpu0, 2026-09-30)
+
+Write-up: [`12-owasp-ladder.md`](12-owasp-ladder.md) section 7. Code `ladder/l4`, `l5`,
+`jevlike_route.py`; outputs `../results/2026-09-owasp-ladder/learned/`.
+
+* Code in → calibrated P(model right) for all 12 models → pick argmax P − λ·GPU-s.
+  UniXcoder fine-tune: per-model AUC 0.93, calibration error 0.034.
+* Test: 0.971–0.978 accuracy (3 seeds) vs best single 0.905, at lower cost; λ = 1:
+  0.96–0.97 at 0.025–0.033 GPU-s.
+* **Control:** the same UniXcoder trained on the answer key alone scores 0.997 on test.
+  In-distribution, the router's gain is a small model that has learned OWASP.
+* **New category (LOCO, 3 seeds):** router 0.919 / 0.944 / 0.923 > best LLM 0.901 (gains
+  +0.019 to +0.043, every CI above 0) > direct classifier 0.875. First router here that
+  transfers to an unseen category. Seeds 1-2 ran on gpu7 after gpu0 was withdrawn.
+
+### E24 — Train on OWASP, route on IRIS: does not transfer (gpu7, 2026-09-30)
+
+Write-up: [`12-owasp-ladder.md`](12-owasp-ladder.md) section 8. Outputs
+`../results/2026-09-iris-cross/` (12 models × 2,257 IRIS paths, same settings as OWASP;
+routers in `learned/`; `eval.txt`).
+
+* Model ranking flips: gpt-oss-120b AUC 0.907 on OWASP → 0.605 on IRIS; Qwen3-32B is the
+  only strong IRIS model (AUC 0.855, TPR − FPR 0.311).
+* Every router fitted on OWASP loses on IRIS to the OWASP-chosen single model (gpt-oss-120b,
+  acc 0.767): emb-lr 0.605 (−0.162, CI −0.178 to −0.146), fine-tuned 0.37-0.59 (−0.18 to
+  −0.40), and mostly below random same-mix routing (z −6.1 to +0.7).
+* Cause: base-rate shift (65% real → 15%). The router learned "Granite (says yes 94%) is
+  right" on OWASP and sends ~60% of IRIS paths to Granite, which is right on 15% there.
+  The direct classifier swings 0.15-0.83 across seeds for the same reason.
+* Run notes: all 12 runs clean (no errors, no hung requests; DeepSeek 10 unparsed). Run
+  paused 75 min when another user's job took gpu7 in a gap between models.
+
+### E25 — Free zero-shot Jev stand-in: acts as "always Qwen3-8B" (gpu7, 2026-09-30)
+
+Write-up: [`12-owasp-ladder.md`](12-owasp-ladder.md) section 9. Outputs
+`../results/2026-09-jev-standin/`.
+
+* Qwen3-8B plays Jev: code + one description per ladder tier → probability per tier.
+  Generic and OWASP-informed descriptions; 4 runs, 8,426 decisions, 5 GPU-min.
+* Picks the 8B for 74-98% of IRIS paths, the 120B never. IRIS: acc 0.670 / 0.695, AUC
+  0.767 / 0.775, recall@10 0.553 / 0.600 — ≈ the 8B alone (0.695, 0.784, 0.603), no better
+  than random same-mix, below the 8B→32B cascade (0.755, 0.830, 0.691 at 0.059 GPU-s).
+* OWASP test: ≈ 8B again (0.670 / 0.701) vs gpt-oss-120b 0.905.
+* Reading: zero-shot "how hard does this look" does not identify the right model; on IRIS
+  the confidence cascade remains the only routing that helps.
+
+### E26 — Cascade router without hindsight (CPU, 2026-10-01)
+
+Write-up: [`13-cascade-router.md`](13-cascade-router.md). Output
+`../results/2026-10-cascade/cascade.txt`, script `ladder/l9_cascade.py`.
+
+* a) f chosen leave-one-repo-out (8B → 32B, IRIS): f = 0.30 in 12/13 folds; recall@10
+  0.648 at 0.059 GPU-s vs 8B 0.603 / 32B 0.690 (0.115), random escalation 0.570 (z +2.0).
+  **Corrects E20:** "matches the 32B" (0.677 vs 0.678) relied on a hindsight f.
+* b) Pair chosen from k target labels (within-project AUC gate): picks 8B → 32B in 4% /
+  15% / 13% / 25% / 45% of draws at k = 25 / 50 / 100 / 200 / 400; recall@10 0.45 → 0.66 vs
+  known pair 0.67-0.73; the pair chosen on OWASP (1.5B → 120B) is worst (0.44-0.50).
+  Pooled-across-projects AUC gate was wrong (Simpson) and was replaced.
+* c) OWASP: calibrated cascade 0.872-0.880 acc at 0.12-0.15 GPU-s, no better than
+  gpt-oss-120b (0.905, 0.156); gpt-oss-20b alone 0.869 at 0.061 is the sensible choice.
+
+### E27 — IRIS re-scored per vulnerability (CPU, 2026-10-02)
+
+Write-up: [`14-per-cve-and-stages.md`](14-per-cve-and-stages.md) sections 1-2. Output
+`../results/2026-10-percve/percve.txt`, script `ladder/l10_percve.py`.
+
+* IRIS-16 = 9 CVEs with both real and false paths (one CVE gives up to 181 real paths).
+  Random order finds 6.6 of 9 in the top 10; Qwen3-8B 8, Qwen3-32B 9, cascades 9.
+* Only LLM vs random separates (8 of 9 CVEs); 8B vs 32B vs cascades all overlap.
+* Per CVE, gpt-oss-20b ≈ Qwen3-32B (share 0.059 vs 0.052) though per path it looked far worse.
+* New label-free **stop rule** cascade: 20% sent up, 0.048 GPU-s, 32B-level per CVE.
+* **Corrects E20/doc 13:** renaming identifiers does not hurt per CVE (renamed 8B finds
+  9 of 9); the AUC/recall@10 drop was a path-level effect of ff4j/ESAPI.
+
+### E28 — Scaled IRIS: which stage gets the big model (gpu7, started 2026-10-02)
+
+Write-up: [`14-per-cve-and-stages.md`](14-per-cve-and-stages.md) sections 3 and 5. Output
+`../results/2026-10-scaled-iris/scaled.txt`. 80 projects; spec stage with Qwen3-8B and
+Qwen3-32B (deepseek-coder-7b crashed past its 4k context, not run); filter stage with Qwen3-8B,
+Qwen3-32B and the stop rule on every spec run. Scripts `ladder/run_scaled_iris.sh`,
+`patch_iris_scaled.py`, `iris_gpt_scaled.py`, `run_window2.sh`, `filter_dedup.py`, analysis
+`ladder/l11_scaled.py`. GPU: window 1 2026-10-02 17:49-20:27 IST, window 2 2026-10-03 11:08-14:59 IST.
+
+* Spec: 8B detects 52 of 80 CVEs (81,596 paths), 32B 47 (55,720 paths). 8B spec costs 2,970
+  GPU-s vs 5,740, but 12.6 h vs 7.6 h of CodeQL and 4 projects CodeQL never finishes.
+* **Best pipeline: 32B spec + 8B filter, 28 of 80 CVEs found within 10 paths per project, 7,189
+  GPU-s.** Reverse allocation (8B spec + 32B filter): 20 CVEs, 10,412 GPU-s; paired +8.0
+  [+1.0, +15.0]. All-32B 23 (12,347 GPU-s); all-8B 24 (4,602 GPU-s, −3.7 [−10.7, +3.0]).
+* The 32B filter has within-project AUC 0.70-0.75 but finds the first real path later than
+  random order (share 0.18-0.19 vs 0.14-0.15): confident false alarms at the top. The IRIS-16
+  filter-stage conclusions (E20, E26, E27) do not carry over at this scale.
+
 ---
 
 ### Where that leaves the project

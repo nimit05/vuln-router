@@ -1,0 +1,4 @@
+{"judge": "qwen3-8b", "variant": "generic", "data": "iris", "wall_s": 40, "units": 2257}
+{"judge": "qwen3-8b", "variant": "generic", "data": "owasp", "wall_s": 72, "units": 1956}
+{"judge": "qwen3-8b", "variant": "informed", "data": "iris", "wall_s": 40, "units": 2257}
+{"judge": "qwen3-8b", "variant": "informed", "data": "owasp", "wall_s": 72, "units": 1956}

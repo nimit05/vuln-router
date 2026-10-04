@@ -1,0 +1,34 @@
+a) IRIS, Qwen3-8B -> Qwen3-32B; f chosen on the other projects (leave one repo out)
+   rule: smallest f whose recall@10 on the other projects is within 0.01 of sending everything to the 32B
+
+   hindsight curve, all IRIS (for reference only):
+   f=0.00:0.603  f=0.10:0.646  f=0.20:0.658  f=0.30:0.691  f=0.40:0.691  f=0.50:0.691  f=0.60:0.690  f=0.70:0.690  f=0.80:0.690  f=0.90:0.690  f=1.00:0.690
+
+   f chosen per held-out repo: esapi-java-leg 0.30, sling-org-apac 0.30, sling-org-apac 0.30, commons-text 0.30, plexus-archive 0.30, plexus-utils 0.30, ff4j 0.30, workflow-cps-g 0.30, workflow-multi 0.30, cron-utils 0.30, antisamy 0.30, curekit 0.30, zt-zip 0.10
+                                                 rec@10    auc tpr-fpr    acc  gpu_s
+  Qwen3-8B on everything                          0.603  0.784   0.164  0.695  0.025
+  Qwen3-32B on everything                         0.690  0.855   0.311  0.659  0.115
+  cascade, f from held-out rule (29% up)          0.648  0.818   0.252  0.754  0.059
+  random escalation, same count per project       0.570   (cascade z = +2.0)
+
+b) IRIS, pair picked from k labelled units of one half of the repos, scored on the other half; f = 0.30 (median of a); 300 draws per k
+   pair picked from all OWASP labels instead: qwen-1.5b-verbose -> gpt-oss-120b-low
+     k picks 8B->32B  cascade E20 pair OWASP pair  all-32B  gpu_s   recall@10 on the unseen half (mean over draws)
+    25            4%    0.452    0.694      0.455    0.694  0.058   most picked: qwen3-1.7b->qwen3-1.7b 10%; phi-3.8b->qwen3-32b 8%
+    50           15%    0.516    0.696      0.465    0.696  0.056   most picked: qwen3-8b->qwen3-32b 15%; qwen3-1.7b->qwen3-32b 12%
+   100           13%    0.515    0.670      0.436    0.669  0.059   most picked: qwen3-32b->qwen3-32b 19%; qwen3-1.7b->qwen3-32b 16%
+   200           25%    0.588    0.699      0.464    0.699  0.067   most picked: qwen3-8b->qwen3-32b 25%; qwen3-32b->qwen3-32b 25%
+   400           45%    0.662    0.731      0.498    0.731  0.070   most picked: qwen3-8b->qwen3-32b 45%; qwen3-32b->qwen3-32b 25%
+
+c) OWASP: pair picked from k labelled train units, f chosen on train (smallest f within 0.01 AUC of all-strong), scored on the 588 test units
+                                                 rec@10    auc tpr-fpr    acc  gpu_s
+  qwen3-8b-nothink on everything                  0.437  0.725   0.303  0.697  0.033
+  gpt-oss-20b-low on everything                   0.434  0.875   0.741  0.869  0.061
+  qwen3-32b-nothink on everything                 0.451  0.837   0.441  0.774  0.140
+  gpt-oss-120b-low on everything                  0.449  0.892   0.787  0.905  0.156
+  cascade, k=25 (qwen-1.5b->gpt-oss-120b 33%)     0.444  0.864   0.667  0.847  0.120
+  cascade, k=50 (qwen-1.5b->gpt-oss-120b 31%)     0.443  0.871   0.697  0.860  0.115
+  cascade, k=100 (qwen-1.5b->gpt-oss-120b 41%)    0.443  0.879   0.739  0.875  0.117
+  cascade, k=200 (qwen-1.5b->gpt-oss-120b 47%)    0.445  0.882   0.748  0.880  0.128
+  cascade, k=400 (qwen-1.5b->gpt-oss-120b 55%)    0.445  0.882   0.746  0.879  0.132
+  cascade, k=all train (qwen-1.5b->gpt-oss-120b 100%)  0.449  0.880   0.731  0.872  0.153

@@ -1,0 +1,44 @@
+pool (cheapest first):
+  gpt-oss-120b-low       gpu_s 0.156  test acc 0.905
+  always-yes             gpu_s 0.000  test acc 0.646
+  always-no              gpu_s 0.000  test acc 0.354
+test oracle acc 1.000   n_test 588
+
+lam = 0.0
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:gpt-oss-120b-low               0.905   0.787  0.156   0.905      0.905   -0.0  [+0.000, +0.000]  gpt-oss-120b-low:588
+  cat                                 0.922   0.794  0.135   0.922      0.870    7.0  [+0.000, +0.034]  gpt-oss-120b-low:509, always-yes:79
+  knn(k=5)                            0.923   0.821  0.131   0.923      0.855    7.9  [+0.000, +0.039]  gpt-oss-120b-low:494, always-yes:78, always-no:16
+  knn(k=5) - cat: +0.002  95% CI [-0.017, +0.020]
+  cascade always-yes->gpt-oss-120b-low w=0.00  0.646   0.000  0.000   0.646      0.646   -0.0  [-0.301, -0.216]  escalated 0%
+
+lam = 0.25
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:gpt-oss-120b-low               0.905   0.787  0.156   0.866      0.866    0.0  [+0.000, +0.000]  gpt-oss-120b-low:588
+  cat                                 0.922   0.794  0.132   0.889      0.832    7.3  [+0.006, +0.041]  gpt-oss-120b-low:498, always-yes:90
+  knn(k=10)                           0.917   0.788  0.110   0.889      0.793    9.1  [+0.003, +0.045]  gpt-oss-120b-low:415, always-yes:156, always-no:17
+  knn(k=10) - cat: +0.000  95% CI [-0.017, +0.017]
+  cascade always-yes->gpt-oss-120b-low w=0.00  0.646   0.000  0.000   0.646      0.646   -0.0  [-0.262, -0.177]  escalated 0%
+
+lam = 1.0
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:gpt-oss-120b-low               0.905   0.787  0.156   0.749      0.749   -0.0  [+0.000, +0.000]  gpt-oss-120b-low:588
+  cat                                 0.912   0.763  0.120   0.791      0.725    7.4  [+0.022, +0.064]  gpt-oss-120b-low:454, always-yes:134
+  knn(k=5)                            0.891   0.725  0.088   0.803      0.682    9.4  [+0.027, +0.083]  gpt-oss-120b-low:332, always-yes:211, always-no:45
+  knn(k=5) - cat: +0.011  95% CI [-0.012, +0.034]
+  cascade always-yes->gpt-oss-120b-low w=0.00  0.646   0.000  0.000   0.646      0.646   -0.0  [-0.145, -0.060]  escalated 0%
+
+lam = 4.0
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:always-yes                     0.646   0.000  0.000   0.646      0.646   -0.0  [+0.000, +0.000]  always-yes:588
+  cat                                 0.646   0.000  0.000   0.646      0.646   -0.0  [+0.000, +0.000]  always-yes:588
+  knn(k=5)                            0.740   0.373  0.000   0.740      0.569    9.7  [+0.051, +0.133]  always-yes:433, always-no:155
+  knn(k=5) - cat: +0.093  95% CI [+0.051, +0.133]
+  cascade always-yes->gpt-oss-120b-low w=0.00  0.646   0.000  0.000   0.646      0.646   -0.0  [+0.000, +0.000]  escalated 0%
+
+leave-one-category-out (train = all units of the other categories)
+    lam  best single  knn(k=20)  cascade  oracle   reward, pooled over held-out units
+   0.00        0.901      0.869    0.645   1.000
+   0.25        0.862      0.826    0.645   1.000
+   1.00        0.745      0.709    0.645   1.000
+   4.00        0.645      0.658    0.645   1.000

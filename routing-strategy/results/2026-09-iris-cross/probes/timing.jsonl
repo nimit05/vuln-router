@@ -1,0 +1,12 @@
+{"model": "qwen3-8b-nothink", "units_file": "iris", "wall_s": 56, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen3-32b-nothink", "units_file": "iris", "wall_s": 259, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "gpt-oss-20b-low", "units_file": "iris", "wall_s": 118, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "gpt-oss-120b-low", "units_file": "iris", "wall_s": 255, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen3-1.7b-nothink", "units_file": "iris", "wall_s": 20, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "phi-4-verbose", "units_file": "iris", "wall_s": 746, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "nemo-12b-nothink", "units_file": "iris", "wall_s": 120, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen-7b-verbose", "units_file": "iris", "wall_s": 56, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "granite-8b-verbose", "units_file": "iris", "wall_s": 147, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "deepseek-6.7b-verbose", "units_file": "iris", "wall_s": 429, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "phi-3.8b-verbose", "units_file": "iris", "wall_s": 41, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}
+{"model": "qwen-1.5b-verbose", "units_file": "iris", "wall_s": 22, "units": 2257, "gpu": "A100-SXM4-80GB x1", "workers": 32}

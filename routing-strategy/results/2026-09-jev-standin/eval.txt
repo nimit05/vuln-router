@@ -1,0 +1,24 @@
+IRIS, 2257 paths (15% real), groups = projects
+  router                                                  acc tpr-fpr    auc rec@10  gpu_s
+  single qwen3-1.7b-nothink                             0.672  -0.064  0.560  0.433  0.009
+  single qwen3-8b-nothink                               0.695   0.164  0.784  0.603  0.025
+  single qwen3-32b-nothink                              0.659   0.311  0.855  0.690  0.115
+  single gpt-oss-120b-low  <- best on OWASP train       0.767   0.062  0.605  0.381  0.113
+  cascade 8B -> 32B, top 30% per group (30% up)         0.755   0.258  0.830  0.691  0.059
+  Jev stand-in, generic descriptions                    0.670   0.129  0.767  0.553  0.038
+                                                       vs random same mix: z(acc) -3.6, z(auc) +1.9; judge 0.018 GPU-s; mix qwen3-8b 1672, qwen3-1.7b 583, qwen3-32b 2
+  Jev stand-in, informed descriptions                   0.695   0.168  0.775  0.600  0.044
+                                                       vs random same mix: z(acc) +0.2, z(auc) -1.1; judge 0.018 GPU-s; mix qwen3-8b 2214, qwen3-32b 42, qwen3-1.7b 1
+
+OWASP test split, 588 units (65% real), groups = categories
+  router                                                  acc tpr-fpr    auc rec@10  gpu_s
+  single qwen3-1.7b-nothink                             0.602  -0.036  0.523  0.399  0.013
+  single qwen3-8b-nothink                               0.697   0.303  0.725  0.437  0.033
+  single qwen3-32b-nothink                              0.774   0.441  0.837  0.451  0.140
+  single gpt-oss-120b-low  <- best on OWASP train       0.905   0.787  0.892  0.449  0.156
+  cascade 8B -> 32B, top 30% per group (30% up)         0.701   0.330  0.751  0.441  0.075
+  Jev stand-in, generic descriptions                    0.670   0.241  0.662  0.419  0.067
+                                                       vs random same mix: z(acc) -1.8, z(auc) -1.0; judge 0.037 GPU-s; mix qwen3-8b 510, qwen3-1.7b 78
+  Jev stand-in, informed descriptions                   0.701   0.308  0.733  0.443  0.072
+                                                       vs random same mix: z(acc) +0.6, z(auc) +1.0; judge 0.037 GPU-s; mix qwen3-8b 576, qwen3-32b 12
+

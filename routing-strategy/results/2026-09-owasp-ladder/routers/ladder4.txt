@@ -1,0 +1,45 @@
+pool (cheapest first):
+  qwen3-1.7b-nothink     gpu_s 0.013  test acc 0.602
+  qwen3-8b-nothink       gpu_s 0.033  test acc 0.697
+  qwen3-32b-nothink      gpu_s 0.140  test acc 0.774
+  gpt-oss-120b-low       gpu_s 0.156  test acc 0.905
+test oracle acc 0.974   n_test 588
+
+lam = 0.0
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:gpt-oss-120b-low               0.905   0.787  0.156   0.905      0.905   -0.0  [+0.000, +0.000]  gpt-oss-120b-low:588
+  cat                                 0.929   0.815  0.135   0.929      0.856    7.9  [+0.003, +0.044]  gpt-oss-120b-low:454, qwen3-32b-nothink:47, qwen3-8b-nothink:44, qwen3-1.7b-nothink:43
+  knn(k=20)                           0.912   0.787  0.132   0.912      0.846    6.8  [-0.014, +0.027]  gpt-oss-120b-low:413, qwen3-32b-nothink:77, qwen3-8b-nothink:53, qwen3-1.7b-nothink:45
+  knn(k=20) - cat: -0.017  95% CI [-0.037, +0.000]
+  cascade qwen3-1.7b-nothink->gpt-oss-120b-low w=0.50  0.905   0.787  0.169   0.905      0.905   -0.0  [+0.000, +0.000]  escalated 100%
+
+lam = 0.25
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:gpt-oss-120b-low               0.905   0.787  0.156   0.866      0.866    0.0  [+0.000, +0.000]  gpt-oss-120b-low:588
+  cat                                 0.929   0.815  0.135   0.895      0.823    7.9  [+0.009, +0.050]  gpt-oss-120b-low:454, qwen3-32b-nothink:47, qwen3-8b-nothink:44, qwen3-1.7b-nothink:43
+  knn(k=20)                           0.912   0.787  0.132   0.879      0.813    6.8  [-0.008, +0.033]  gpt-oss-120b-low:413, qwen3-32b-nothink:77, qwen3-8b-nothink:53, qwen3-1.7b-nothink:45
+  knn(k=20) - cat: -0.017  95% CI [-0.036, +0.002]
+  cascade qwen3-1.7b-nothink->gpt-oss-120b-low w=0.50  0.905   0.787  0.169   0.862      0.862   -0.0  [-0.003, -0.003]  escalated 100%
+
+lam = 1.0
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:gpt-oss-120b-low               0.905   0.787  0.156   0.749      0.749   -0.0  [+0.000, +0.000]  gpt-oss-120b-low:588
+  cat                                 0.923   0.810  0.127   0.797      0.724    8.0  [+0.025, +0.072]  gpt-oss-120b-low:454, qwen3-8b-nothink:91, qwen3-1.7b-nothink:43
+  knn(k=50)                           0.912   0.789  0.115   0.797      0.714    7.9  [+0.025, +0.071]  gpt-oss-120b-low:385, qwen3-8b-nothink:151, qwen3-1.7b-nothink:39, qwen3-32b-nothink:13
+  knn(k=50) - cat: +0.000  95% CI [-0.016, +0.016]
+  cascade qwen3-8b-nothink->gpt-oss-120b-low w=0.48  0.869   0.680  0.120   0.749      0.693    5.6  [-0.019, +0.019]  escalated 55%
+
+lam = 4.0
+  router                                acc tpr-fpr  gpu_s  reward random-mix      z   vs best, 95% CI  mix
+  best:qwen3-8b-nothink               0.697   0.303  0.033   0.564      0.564   -0.0  [+0.000, +0.000]  qwen3-8b-nothink:588
+  cat                                 0.723   0.334  0.032   0.597      0.563    5.1  [+0.015, +0.051]  qwen3-8b-nothink:538, qwen3-1.7b-nothink:50
+  knn(k=5)                            0.753   0.366  0.031   0.629      0.537    7.6  [+0.031, +0.098]  qwen3-1.7b-nothink:283, qwen3-8b-nothink:268, gpt-oss-120b-low:23, qwen3-32b-nothink:14
+  knn(k=5) - cat: +0.032  95% CI [-0.000, +0.064]
+  cascade qwen3-8b-nothink->qwen3-32b-nothink w=0.00  0.697   0.303  0.033   0.564      0.564    0.0  [+0.000, +0.000]  escalated 0%
+
+leave-one-category-out (train = all units of the other categories)
+    lam  best single  knn(k=20)  cascade  oracle   reward, pooled over held-out units
+   0.00        0.901      0.814    0.901   0.979
+   0.25        0.862      0.785    0.858   0.970
+   1.00        0.745      0.687    0.741   0.942
+   4.00        0.568      0.578    0.559   0.830

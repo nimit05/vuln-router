@@ -13,3 +13,14 @@ HANDOFF.md
 researchloop/
 third_party/HybridLLM/figures/
 .claude/
+
+# Run artefacts that are noisy or re-creatable; the model outputs, tables and write-ups are kept
+results/**/logs/
+results/**/*.log
+results/**/*.npy
+results/**/emb_*.ids.json
+results/**/*.tokbug
+results/**/status/*.done
+results/**/status/*.go
+data/owasp_ladder/emb_*
+data/owasp_ladder/results/

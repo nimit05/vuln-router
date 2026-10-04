@@ -1,0 +1,6 @@
+{"model": "qwen3-32b-nothink", "units_file": "dedup", "wall_s": 11044, "units": 50177, "workers": 32}
+{"model": "qwen3-8b-nothink", "units_file": "dedup", "wall_s": 2422, "units": 50177, "workers": 32}
+{"model": "qwen3-32b-nothink", "units_file": "s_q8_full", "wall_s": 7442.2, "units": 81596, "workers": 32, "dedup": true, "estimated_part": 1210.0}
+{"model": "qwen3-32b-nothink", "units_file": "s_q32_full", "wall_s": 6606.7, "units": 55720, "workers": 32, "dedup": true, "estimated_part": 1794.9}
+{"model": "qwen3-8b-nothink", "units_file": "s_q8_full", "wall_s": 1632.1, "units": 81596, "workers": 32, "dedup": true, "estimated_part": 265.3}
+{"model": "qwen3-8b-nothink", "units_file": "s_q32_full", "wall_s": 1448.9, "units": 55720, "workers": 32, "dedup": true, "estimated_part": 393.6}

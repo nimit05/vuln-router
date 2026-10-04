@@ -1,0 +1,48 @@
+1) spec stage, per model
+  model                projects ok CVE w/ real path  paths  real tokens in/out (M) GPU busy s GPU-s/project
+  Qwen3-8B                      80               52  81596  1577     8.71/7.69           2970          37.1
+                       CodeQL could not finish (64 GB, 3 h): 4 projects ['cxf_CVE-2016-6812_3.0.11', 'cxf_CVE-2019-17573_3.2.11', 'spring-framework_CVE-2022-22', 'wildfly_CVE-2018-1047_11.0.0']
+  Qwen3-32B                     80               47  55720   933     8.76/2.96           5740          71.8
+                       CodeQL could not finish (64 GB, 3 h): 0 projects []
+
+2) whole pipeline: CVEs found when the analyst reads k paths per project (of 80 CVEs run)
+  spec               filter                       found@1    @5   @10 medIFA GPU-s spec  filter   total
+  Qwen3-8B           no filter (random order)         5.8  15.1  21.4   21.6       2970       0    2970
+  Qwen3-8B           Qwen3-8B                         7.0  19.0  24.0   29.1       2970    1632    4602
+  Qwen3-8B           Qwen3-32B                       10.0  14.0  20.0   22.5       2970    7442   10412
+  Qwen3-8B           8B->32B stop rule (3% up)       10.0  16.0  23.0   22.5       2970    1888    4858
+  Qwen3-8B           8B->32B fixed f = 0.30          11.0  14.0  20.0   20.7       2970    3865    6835
+  Qwen3-32B          no filter (random order)         8.4  18.0  23.9   13.6       5740       0    5740
+  Qwen3-32B          Qwen3-8B                        18.0  25.0  28.0    4.5       5740    1449    7189
+  Qwen3-32B          Qwen3-32B                       11.0  18.0  23.0   14.0       5740    6607   12347
+  Qwen3-32B          8B->32B stop rule (5% up)       12.0  21.0  25.0   10.0       5740    1809    7549
+  Qwen3-32B          8B->32B fixed f = 0.30          12.0  21.0  24.0   11.0       5740    3431    9171
+
+3) per spec run: the filter rankers compared CVE by CVE (only CVEs with real and false paths)
+  Qwen3-8B: 50 CVEs
+    no filter (random order)       share read before hit 0.141 [0.107,0.177]
+    Qwen3-8B                       share read before hit 0.182 [0.116,0.253]
+    Qwen3-32B                      share read before hit 0.180 [0.111,0.257]
+    8B->32B stop rule (3% up)      share read before hit 0.184 [0.122,0.254]
+    8B->32B fixed f = 0.30         share read before hit 0.161 [0.100,0.229]
+    8B->32B stop rule (3% up) vs Qwen3-32B: fewer false alarms first on 17, same 16, more 17
+    Qwen3-8B vs Qwen3-32B: fewer false alarms first on 24, same 3, more 23
+    Qwen3-8B vs no filter (random order): fewer false alarms first on 26, same 0, more 24
+  Qwen3-32B: 44 CVEs
+    no filter (random order)       share read before hit 0.146 [0.108,0.189]
+    Qwen3-8B                       share read before hit 0.125 [0.074,0.181]
+    Qwen3-32B                      share read before hit 0.192 [0.118,0.273]
+    8B->32B stop rule (5% up)      share read before hit 0.164 [0.102,0.229]
+    8B->32B fixed f = 0.30         share read before hit 0.153 [0.090,0.220]
+    8B->32B stop rule (5% up) vs Qwen3-32B: fewer false alarms first on 14, same 22, more 8
+    Qwen3-8B vs Qwen3-32B: fewer false alarms first on 24, same 6, more 14
+    Qwen3-8B vs no filter (random order): fewer false alarms first on 29, same 0, more 15
+
+4) CVE by CVE (all 80 run): found within 10 paths, 'spec Qwen3-32B + filter Qwen3-8B' minus each other pipeline
+  minus spec Qwen3-8B + filter Qwen3-8B       +3.7 CVEs  95% CI [-3.0, +10.7]  better on 8, worse on 4
+  minus spec Qwen3-8B + filter Qwen3-32B      +8.0 CVEs  95% CI [+1.0, +15.0]  better on 11, worse on 3
+  minus spec Qwen3-8B + stop rule             +5.0 CVEs  95% CI [-1.0, +11.0]  better on 8, worse on 3
+  minus spec Qwen3-32B + filter Qwen3-32B     +5.0 CVEs  95% CI [+0.0, +11.0]  better on 7, worse on 2
+  minus spec Qwen3-32B + stop rule            +3.0 CVEs  95% CI [-2.0, +8.0]  better on 5, worse on 2
+  CodeQL time for the Qwen3-8B spec run (seconds summed over projects, incl. retries): 12.6 h
+  CodeQL time for the Qwen3-32B spec run (seconds summed over projects, incl. retries): 7.6 h

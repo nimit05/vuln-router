@@ -1,0 +1,162 @@
+{
+ "models": [
+  "qwen3-8b-nothink",
+  "qwen3-32b-nothink"
+ ],
+ "rho": 10.0,
+ "epochs": 300,
+ "rows": [
+  {
+   "name": "no filter",
+   "detected": 10,
+   "avg_fdr": 82.11994940103641,
+   "avg_f1": 0.2116643047751529,
+   "tp_kept": 344,
+   "kept": 2259
+  },
+  {
+   "name": "always-qwen3-8b-nothink",
+   "detected": 5,
+   "avg_fdr": 80.94524030064981,
+   "avg_f1": 0.165562996031746,
+   "tp_kept": 155,
+   "kept": 675,
+   "gpu_s": 535.3020299010844,
+   "share": {
+    "qwen3-8b-nothink": 2257
+   }
+  },
+  {
+   "name": "always-qwen3-32b-nothink",
+   "detected": 8,
+   "avg_fdr": 78.80191389535402,
+   "avg_f1": 0.21335174853235472,
+   "tp_kept": 222,
+   "kept": 865,
+   "gpu_s": 2950.527612,
+   "share": {
+    "qwen3-32b-nothink": 2257
+   }
+  },
+  {
+   "name": "per-path oracle",
+   "detected": 8,
+   "avg_fdr": 47.10859756040479,
+   "avg_f1": 0.38248827429129834,
+   "tp_kept": 229,
+   "kept": 455,
+   "gpu_s": 893.5629377612854,
+   "share": {
+    "qwen3-8b-nothink": 1889,
+    "qwen3-32b-nothink": 368
+   }
+  },
+  {
+   "name": "shuffled oracle",
+   "avg_f1": 0.28767405471785057,
+   "sd": 0.052304332971989276
+  },
+  {
+   "name": "GraphRouter v1 (upstream label)",
+   "detected": 6,
+   "avg_fdr": 70.33782890576036,
+   "avg_f1": 0.23377132735685366,
+   "tp_kept": 152,
+   "kept": 510,
+   "gpu_s": 1102.71242903951,
+   "share": {
+    "qwen3-8b-nothink": 1730,
+    "qwen3-32b-nothink": 527
+   },
+   "null_f1": [
+    0.19049096518371297,
+    0.028272428154279834
+   ],
+   "z": 1.5308328643356717
+  },
+  {
+   "name": "GraphRouter v2 lambda=0",
+   "detected": 8,
+   "avg_fdr": 80.82683017465627,
+   "avg_f1": 0.19503012434147868,
+   "tp_kept": 216,
+   "kept": 843,
+   "gpu_s": 2740.0242172240655,
+   "share": {
+    "qwen3-32b-nothink": 2051,
+    "qwen3-8b-nothink": 206
+   },
+   "null_f1": [
+    0.18981397356834886,
+    0.014231426203435205
+   ],
+   "z": 0.3665234038083077
+  },
+  {
+   "name": "GraphRouter v2 lambda=0.005",
+   "detected": 6,
+   "avg_fdr": 81.67163375496709,
+   "avg_f1": 0.182637994186547,
+   "tp_kept": 181,
+   "kept": 726,
+   "gpu_s": 1410.5581614850753,
+   "share": {
+    "qwen3-8b-nothink": 1454,
+    "qwen3-32b-nothink": 803
+   },
+   "null_f1": [
+    0.1704800822724491,
+    0.027915755901636266
+   ],
+   "z": 0.4355215010812325
+  },
+  {
+   "name": "GraphRouter v2 lambda=0.01",
+   "detected": 6,
+   "avg_fdr": 75.35609186471255,
+   "avg_f1": 0.2319849653476414,
+   "tp_kept": 176,
+   "kept": 680,
+   "gpu_s": 839.7980232236148,
+   "share": {
+    "qwen3-8b-nothink": 1973,
+    "qwen3-32b-nothink": 284
+   },
+   "null_f1": [
+    0.20297182669998506,
+    0.029071528665431848
+   ],
+   "z": 0.9979915050753785
+  },
+  {
+   "name": "GraphRouter v2 lambda=0.02",
+   "detected": 6,
+   "avg_fdr": 70.85479384843691,
+   "avg_f1": 0.22883947791734677,
+   "tp_kept": 160,
+   "kept": 672,
+   "gpu_s": 635.1833767931832,
+   "share": {
+    "qwen3-8b-nothink": 2163,
+    "qwen3-32b-nothink": 94
+   },
+   "null_f1": [
+    0.18591785923867615,
+    0.02301946413553945
+   ],
+   "z": 1.8645794022808935
+  }
+ ],
+ "mean_sec": [
+  0.23717413819277122,
+  1.307278516614976
+ ],
+ "mean_util": [
+  0.8894367944447473,
+  0.9153254069858311
+ ],
+ "util_on_tp": [
+  0.4272230944554949,
+  0.6343910739505907
+ ]
+}
